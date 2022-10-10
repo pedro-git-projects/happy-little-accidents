@@ -13,11 +13,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS WebSockets)
 
 add_executable(HappyLittleAccidentsServer
   main.cpp
+  gamemanager.h
+  gamemanager.cpp
+  websockethandler.h
+  websockethandler.cpp
 )
 target_link_libraries(HappyLittleAccidentsServer Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(HappyLittleAccidentsServer Qt6::WebSockets)
 
 install(TARGETS HappyLittleAccidentsServer
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
