@@ -1,5 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+
+#include "controllers/websockethandler.h"
 
 
 int main(int argc, char *argv[])
@@ -9,6 +12,8 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
 
+    WebSocketHandler socketHandler;
+
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
@@ -17,6 +22,9 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
+
+    QQmlContext* context = engine.rootContext();
+    context->setContextProperty("webSocketHandler", &socketHandler);
 
     return app.exec();
 }
