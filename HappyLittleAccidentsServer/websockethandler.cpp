@@ -5,7 +5,7 @@ WebSocketHandler::WebSocketHandler(QObject *parent) : QObject{parent} {
     socketServer = new QWebSocketServer("HappyLittleAccidentsServer", QWebSocketServer::NonSecureMode, this);
     connect(socketServer, &QWebSocketServer::newConnection, this, &WebSocketHandler::onNewSocketConnection);
 
-    if(socketServer->listen(QHostAddress::Any, 8080)){
+    if(socketServer->listen(QHostAddress::Any, 8585)){
        qDebug() << "Server is up!" << Qt::endl;
     } else {
        qDebug() << "Failed to start server" << Qt::endl;

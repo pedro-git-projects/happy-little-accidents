@@ -11,6 +11,6 @@ Window {
     Button {
         anchors.centerIn: parent
         text: "Click Me!"
-        onClicked: webSocketHandler.connectToServer("www.gentoo.org")
+        onClicked: webSocketHandler.connectToServer("ws://127.0.0.1:8585")
     }
 }

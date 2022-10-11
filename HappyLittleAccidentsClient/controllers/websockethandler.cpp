@@ -15,6 +15,7 @@ WebSocketHandler::~WebSocketHandler() {
 
 void WebSocketHandler::onConnected() {
     qDebug() << ":: Client: Connection established" << Qt::endl;
+    webSocket->sendTextMessage("Hello from client");
 }
 
 void WebSocketHandler::onTextMessageRecieved(QString message) {
