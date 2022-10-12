@@ -1,5 +1,8 @@
 #include "websockethandler.h"
 #include <QDebug>
+#include <QString>
+#include <random>
+#include "libs/uuid.h"
 
 WebSocketHandler::WebSocketHandler(QObject *parent) : QObject{parent} {
     socketServer = new QWebSocketServer("HappyLittleAccidentsServer", QWebSocketServer::NonSecureMode, this);
@@ -19,13 +22,15 @@ WebSocketHandler::~WebSocketHandler() {
 void WebSocketHandler::onNewSocketConnection() {
     qDebug() << ":: New client connected" << Qt::endl;
 
+    QString newClientID = QString::fromStdString(uuid::generateUUId());
+
     auto nextClient = socketServer->nextPendingConnection();
     nextClient->setParent(this);
 
     connect(nextClient, &QWebSocket::textMessageReceived, this, &WebSocketHandler::onTextMessageRecieved);
     connect(nextClient, &QWebSocket::disconnected, this, &WebSocketHandler::onSocketDisconnected);
 
-    clientList.append(nextClient);
+    clientList[newClientID] = nextClient;
 }
 
 void WebSocketHandler::onTextMessageRecieved(QString message) {
@@ -35,5 +40,13 @@ void WebSocketHandler::onTextMessageRecieved(QString message) {
 
 void WebSocketHandler::onSocketDisconnected() {
     auto client = qobject_cast<QWebSocket*>(sender());
-    if(client) clientList.removeAll(client);
+    if(client) {
+       for(QMap<QString, QWebSocket*>::iterator mapIterator = clientList.begin(); mapIterator != clientList.end(); mapIterator++) {
+            if(mapIterator.value() == client) {
+                QString uuid = mapIterator.key();
+                clientList.remove(uuid);
+                client->deleteLater();
+            }
+       }
+    }
 }

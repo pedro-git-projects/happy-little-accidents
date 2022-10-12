@@ -2,6 +2,7 @@
 #define WEBSOCKETHANDLER_H
 
 #include <QObject>
+#include <QMap>
 #include <QtWebSockets/QWebSocketServer>
 #include <QtWebSockets/QWebSocket>
 
@@ -20,7 +21,7 @@ public slots:
 
 private:
     QWebSocketServer* socketServer;
-    QList<QWebSocket*> clientList;
+    QMap<QString, QWebSocket*> clientList;
 
 };
 
