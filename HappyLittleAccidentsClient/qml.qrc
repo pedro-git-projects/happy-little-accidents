@@ -3,5 +3,6 @@
         <file>main.qml</file>
         <file>ui/MainMenuScreen.qml</file>
         <file>ui/GameButton.qml</file>
+        <file>ui/GameSelectScreen.qml</file>
     </qresource>
 </RCC>

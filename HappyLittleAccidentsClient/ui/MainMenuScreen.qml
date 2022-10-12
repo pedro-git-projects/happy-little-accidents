@@ -29,15 +29,15 @@ Item {
         buttonText: "Play"
         width: 336
         height: 105
-        onButtonClicked: console.log("Button clicked")
+        onButtonClicked: mainLoader.source = "qrc:/ui/GameSelectScreen.qml"
     }
 
-   GameButton {
+    GameButton {
         id: quitButton
         anchors {
-           top: playButton.bottom
-           topMargin: 40
-           horizontalCenter: parent.horizontalCenter
+            top: playButton.bottom
+            topMargin: 40
+            horizontalCenter: parent.horizontalCenter
         }
 
         buttonText: "Quit"
