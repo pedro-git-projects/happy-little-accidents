@@ -3,14 +3,16 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.0
 
 Window {
-    width: 640
-    height: 480
+    width: 1280
+    height: 720
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("Happy Little Accidents")
 
-    Button {
-        anchors.centerIn: parent
-        text: "Click Me!"
-        onClicked: webSocketHandler.connectToServer("ws://127.0.0.1:8585")
+    Loader {
+       id: mainLoader
+       anchors.fill: parent
+       source: "qrc:ui/MainMenuScreen.qml"
+       Component.onCompleted:  console.log("Loader", mainLoader.status)
     }
+
 }
