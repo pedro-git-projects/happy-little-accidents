@@ -22,4 +22,28 @@ Item {
         color: "#fbf1c7"
         text: "Happy Little Accidents"
     }
+
+    GameButton {
+        id: playButton
+        anchors.centerIn: parent
+        buttonText: "Play"
+        width: 336
+        height: 105
+        onButtonClicked: console.log("Button clicked")
+    }
+
+   GameButton {
+        id: quitButton
+        anchors {
+           top: playButton.bottom
+           topMargin: 40
+           horizontalCenter: parent.horizontalCenter
+        }
+
+        buttonText: "Quit"
+        width: 336
+        height: 105
+        onButtonClicked: Qt.quit()
+    }
+
 }
