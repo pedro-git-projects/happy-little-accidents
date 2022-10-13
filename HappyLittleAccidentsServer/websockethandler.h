@@ -13,6 +13,7 @@ public:
     ~WebSocketHandler();
 
 signals:
+    void newMesssageToProcess(QString message);
 
 public slots:
     void onNewSocketConnection();

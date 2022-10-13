@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "websockethandler.h"
+#include "messageprocessorhandler.h"
 
 class GameManager : public QObject {
     Q_OBJECT
@@ -14,6 +15,7 @@ signals:
 
 private:
     WebSocketHandler* socketHandler;
+    MessageProcessorHandler* messageProcessHandler;
 
 };
 

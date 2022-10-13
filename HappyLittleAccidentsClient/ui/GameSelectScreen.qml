@@ -35,7 +35,7 @@ Item {
         buttonTextPixelSize: 48
         width: 336
         height: 105
-        // onButtonClicked: mainLoader.source = "qrc:/ui/GameSelectScreen.qml"
+        onButtonClicked: webSocketHandler.connectToServer("ws://127.0.0.1:8585");
     }
 
     GameButton {

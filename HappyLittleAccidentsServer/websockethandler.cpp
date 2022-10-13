@@ -34,8 +34,8 @@ void WebSocketHandler::onNewSocketConnection() {
 }
 
 void WebSocketHandler::onTextMessageRecieved(QString message) {
-    qDebug() << ":: Recieved new client message: " << message << Qt::endl;
-
+    qDebug() << ":: Recieved: " << message << Qt::endl;
+    emit newMesssageToProcess(message);
 }
 
 void WebSocketHandler::onSocketDisconnected() {

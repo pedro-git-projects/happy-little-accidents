@@ -22,6 +22,8 @@ add_executable(HappyLittleAccidentsServer
   websockethandler.h
   websockethandler.cpp
   libs/uuid.h libs/uuid.cpp
+  gamelobbyhandler.h gamelobbyhandler.cpp
+  messageprocessorhandler.h messageprocessorhandler.cpp
 )
 target_link_libraries(HappyLittleAccidentsServer Qt${QT_VERSION_MAJOR}::Core)
 target_link_libraries(HappyLittleAccidentsServer Qt6::WebSockets)
