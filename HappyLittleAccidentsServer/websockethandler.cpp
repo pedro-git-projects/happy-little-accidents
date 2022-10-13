@@ -9,9 +9,9 @@ WebSocketHandler::WebSocketHandler(QObject *parent) : QObject{parent} {
     connect(socketServer, &QWebSocketServer::newConnection, this, &WebSocketHandler::onNewSocketConnection);
 
     if(socketServer->listen(QHostAddress::Any, 8585)){
-       qDebug() << "Server is up!" << Qt::endl;
+       qDebug() << "Server is up!";
     } else {
-       qDebug() << "Failed to start server" << Qt::endl;
+       qDebug() << "Failed to start server";
     }
 }
 
@@ -20,7 +20,7 @@ WebSocketHandler::~WebSocketHandler() {
 }
 
 void WebSocketHandler::onNewSocketConnection() {
-    qDebug() << ":: New client connected" << Qt::endl;
+    qDebug() << ":: Server: New client connected";
 
     QString newClientID = QString::fromStdString(uuid::generateUUId());
 
@@ -34,7 +34,7 @@ void WebSocketHandler::onNewSocketConnection() {
 }
 
 void WebSocketHandler::onTextMessageRecieved(QString message) {
-    qDebug() << ":: Recieved: " << message << Qt::endl;
+    qDebug() << ":: Server recieved: " << message;
     emit newMesssageToProcess(message);
 }
 

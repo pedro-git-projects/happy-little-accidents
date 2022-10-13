@@ -14,16 +14,16 @@ WebSocketHandler::~WebSocketHandler() {
 }
 
 void WebSocketHandler::onConnected() {
-    qDebug() << ":: Client: Connection established" << Qt::endl;
-    webSocket->sendTextMessage("Hello from client");
+    qDebug() << ":: Client: Connection established";
+    webSocket->sendTextMessage("type:createGame");
 }
 
 void WebSocketHandler::onTextMessageRecieved(QString message) {
-    qDebug() << ":: Client: Recieved message " << message << Qt::endl;
+    qDebug() << ":: Client: Recieved message " << message;
 
 }
 
 void WebSocketHandler::connectToServer(QString hostAddress) {
-    qDebug() << ":: Client: Conecting to server..." << Qt::endl;
+    qDebug() << ":: Client: Conecting to server...";
     webSocket->open(hostAddress);
 }
