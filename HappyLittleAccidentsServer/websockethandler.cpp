@@ -30,6 +30,8 @@ void WebSocketHandler::onNewSocketConnection() {
     connect(nextClient, &QWebSocket::textMessageReceived, this, &WebSocketHandler::onTextMessageRecieved);
     connect(nextClient, &QWebSocket::disconnected, this, &WebSocketHandler::onSocketDisconnected);
 
+    nextClient->sendTextMessage("type:uniqueID;payLoad:" + newClientID);
+
     clientList[newClientID] = nextClient;
 }
 

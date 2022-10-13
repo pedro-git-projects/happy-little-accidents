@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QtWebSockets/qwebsocket.h>
+#include "controllers/messageprocesshandler.h"
 
 class WebSocketHandler : public QObject {
     Q_OBJECT
@@ -16,10 +17,13 @@ signals:
 public slots:
     void onConnected();
     void onTextMessageRecieved(QString message);
+    void registerID(QString id);
 
 
 private:
     QWebSocket* webSocket;
+    QString clientID;
+    MessageProcessHandler* messageProcessor;
 
 };
 

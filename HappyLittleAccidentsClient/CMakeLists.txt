@@ -20,6 +20,7 @@ set(PROJECT_SOURCES
         qml.qrc
         controllers/websockethandler.h
         controllers/websockethandler.cpp
+        controllers/messageprocesshandler.h controllers/messageprocesshandler.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
