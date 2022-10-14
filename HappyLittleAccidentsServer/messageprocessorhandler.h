@@ -12,6 +12,8 @@ public slots:
     void processMessage(QString message);
 
 signals:
+    void createGameRequest(QString uuid);
+    void joinGameLobbyRequest(QString lobbyID, QString uuid);
 
 };
 

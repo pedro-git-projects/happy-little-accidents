@@ -35,3 +35,7 @@ void WebSocketHandler::connectToServer(QString hostAddress) {
     qDebug() << ":: Client: Conecting to server...";
     webSocket->open(hostAddress);
 }
+
+void WebSocketHandler::createGameRequest() {
+    webSocket->sendTextMessage("type:createGame;payLoad:0;sender:" + clientID);
+}

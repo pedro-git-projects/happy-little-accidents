@@ -1,6 +1,6 @@
 #include "gamelobbyhandler.h"
 
-GameLobbyHandler::GameLobbyHandler(QObject *parent) : QObject{parent} {
+GameLobbyHandler::GameLobbyHandler(QString lobbyID, QObject *parent) : lobbyID{lobbyID} , QObject{parent} {
 
 }
 

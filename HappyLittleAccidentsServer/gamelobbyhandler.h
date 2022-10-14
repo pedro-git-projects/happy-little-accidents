@@ -6,13 +6,14 @@
 class GameLobbyHandler : public QObject {
     Q_OBJECT
 public:
-    explicit GameLobbyHandler(QObject *parent = nullptr);
+    explicit GameLobbyHandler(QString lobbyID, QObject *parent = nullptr);
     void addClient(QString clientID);
 
 signals:
 
 private:
     QList<QString> gameClientList;
+    QString lobbyID;
 
 };
 

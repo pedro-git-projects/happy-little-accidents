@@ -11,6 +11,7 @@ public:
     explicit WebSocketHandler(QObject *parent = nullptr);
     ~WebSocketHandler();
     Q_INVOKABLE void connectToServer(QString hostAddress);
+    Q_INVOKABLE void createGameRequest();
 
 signals:
 

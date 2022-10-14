@@ -40,6 +40,14 @@ void WebSocketHandler::onTextMessageRecieved(QString message) {
     emit newMesssageToProcess(message);
 }
 
+void WebSocketHandler::sendTextMessageToClient(QString message, QString clientID) {
+    if(clientList.contains(clientID)) {
+        QWebSocket* existingClient = clientList[clientID];
+        existingClient->sendTextMessage(message);
+
+    }
+}
+
 void WebSocketHandler::onSocketDisconnected() {
     auto client = qobject_cast<QWebSocket*>(sender());
     if(client) {
