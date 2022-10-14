@@ -2,8 +2,8 @@
 #include "libs/uuid.h"
 
 GameManager::GameManager(QObject *parent) : QObject{parent} {
-    socketHandler = new WebSocketHandler(this);
-    messageProcessHandler = new MessageProcessorHandler(this);
+    socketHandler  =  new WebSocketHandler{this};
+    messageProcessHandler = new MessageProcessorHandler{this};
 
     connect(socketHandler, &WebSocketHandler::newMesssageToProcess, messageProcessHandler, &MessageProcessorHandler::processMessage);
     connect(messageProcessHandler, &MessageProcessorHandler::createGameRequest, this, &GameManager::createGameLobbyRequest);

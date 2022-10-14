@@ -8,9 +8,9 @@ MessageProcessorHandler::MessageProcessorHandler(QObject *parent) : QObject{pare
 
 void MessageProcessorHandler::processMessage(QString message) {
     /*
-    type:createGame;payLoad:0;sender:5555
-    type:joinGame;payLoad:4000;sender:5555
-    type:message;payLoad:Message;sender5555
+        type:createGame;payLoad:0;sender:5555
+        type:joinGame;payLoad:4000;sender:5555
+        type:message;payLoad:Message;sender5555
     */
 
     QStringList separated = message.split( QRegularExpression(";"));
@@ -21,7 +21,7 @@ void MessageProcessorHandler::processMessage(QString message) {
         separated.pop_front();
         separated.pop_front();
         if(separated.first().contains("sender:")) {
-            QString senderID = separated.first();
+            QString senderID{ separated.first() };
             senderID = senderID.remove("sender:");
             emit createGameRequest(senderID);
         }

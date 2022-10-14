@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     socketHandler.connectToServer("ws://127.0.0.1:8585");
 
     QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    const QUrl url{ QStringLiteral("qrc:/main.qml") };
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
