@@ -3,6 +3,7 @@
 #include <QQmlContext>
 
 #include "controllers/websockethandler.h"
+#include "controllers/gamemanager.h"
 
 
 int main(int argc, char *argv[])
@@ -15,6 +16,11 @@ int main(int argc, char *argv[])
     WebSocketHandler socketHandler;
     socketHandler.connectToServer("ws://127.0.0.1:8585");
 
+    GameManager gameManager;
+
+    QObject::connect(&socketHandler, &WebSocketHandler::newMessageReadyFOrProcessing, &gameManager, &GameManager::procssSocketMessage);
+    QObject::connect(&gameManager, &GameManager::readyToSendNewMessage, &socketHandler, &WebSocketHandler::sendMessageToSever);
+
     QQmlApplicationEngine engine;
     const QUrl url{ QStringLiteral("qrc:/main.qml") };
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
@@ -26,6 +32,7 @@ int main(int argc, char *argv[])
 
     QQmlContext* context = engine.rootContext();
     context->setContextProperty("webSocketHandler", &socketHandler);
+    context->setContextProperty("gameManager", &gameManager);
 
     return app.exec();
 }

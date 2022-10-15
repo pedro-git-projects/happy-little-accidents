@@ -11,7 +11,7 @@ public:
 
 signals:
     void uniqueIDRegistration(QString uniqueID);
-
+    void newLobby(QString lobbyID);
 };
 
 #endif // MESSAGEPROCESSHANDLER_H

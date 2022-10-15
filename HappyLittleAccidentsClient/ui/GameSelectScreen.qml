@@ -35,7 +35,7 @@ Item {
         buttonTextPixelSize: 48
         width: 336
         height: 105
-        onButtonClicked: webSocketHandler.createGameRequest();
+        onButtonClicked: gameManager.createGameRequest();
     }
 
     GameButton {

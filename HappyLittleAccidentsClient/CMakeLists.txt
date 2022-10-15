@@ -21,6 +21,7 @@ set(PROJECT_SOURCES
         controllers/websockethandler.h
         controllers/websockethandler.cpp
         controllers/messageprocesshandler.h controllers/messageprocesshandler.cpp
+        controllers/gamemanager.h controllers/gamemanager.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

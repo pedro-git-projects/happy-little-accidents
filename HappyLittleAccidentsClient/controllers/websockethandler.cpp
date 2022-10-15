@@ -1,14 +1,11 @@
 #include "websockethandler.h"
 #include <QDebug>
 
-WebSocketHandler::WebSocketHandler(QObject *parent) : QObject{parent}, clientID(QString()) {
+WebSocketHandler::WebSocketHandler(QObject *parent) : QObject{parent} {
     webSocket = new QWebSocket;
 
     connect(webSocket, &QWebSocket::connected, this, &WebSocketHandler::onConnected);
     connect(webSocket, &QWebSocket::textMessageReceived, this, &WebSocketHandler::onTextMessageRecieved);
-
-    messageProcessor = new MessageProcessHandler(this);
-    connect(messageProcessor, &MessageProcessHandler::uniqueIDRegistration, this, &WebSocketHandler::registerID);
 }
 
 WebSocketHandler::~WebSocketHandler() {
@@ -22,20 +19,14 @@ void WebSocketHandler::onConnected() {
 
 void WebSocketHandler::onTextMessageRecieved(QString message) {
     qDebug() << ":: Client: Recieved message " << message;
-    messageProcessor->processMessage(message);
-
+    emit newMessageReadyFOrProcessing(message);
 }
 
-void WebSocketHandler::registerID(QString id) {
-    clientID = id;
-    qDebug() << ":: Client: New Client ID is " + clientID;
+void WebSocketHandler::sendMessageToSever(QString message) {
+    webSocket->sendTextMessage(message);
 }
 
 void WebSocketHandler::connectToServer(QString hostAddress) {
     qDebug() << ":: Client: Conecting to server...";
     webSocket->open(hostAddress);
-}
-
-void WebSocketHandler::createGameRequest() {
-    webSocket->sendTextMessage("type:createGame;payLoad:0;sender:" + clientID);
 }
