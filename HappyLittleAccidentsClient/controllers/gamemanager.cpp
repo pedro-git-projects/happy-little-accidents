@@ -6,6 +6,7 @@ GameManager::GameManager(QObject *parent) : QObject{parent}, lobbyRoomCode(QStri
     messageProcessHandler = new MessageProcessHandler{this};
 
     connect(messageProcessHandler, &MessageProcessHandler::uniqueIDRegistration, this, &GameManager::registerUUID);
+    connect(messageProcessHandler, &MessageProcessHandler::newLobby, this, &GameManager::joinedLobby);
 }
 
 GameManager::~GameManager() {
@@ -17,8 +18,8 @@ QString GameManager::getLobbyRoomCode() {
 }
 
 void GameManager::setLobbyRoomCode(QString lobbyCode) {
-    if(lobbyRoomCode != lobbyCode) {
-       lobbyCode = lobbyCode;
+    if(this->lobbyRoomCode != lobbyCode) {
+       this->lobbyRoomCode = lobbyCode;
        emit lobbyRoomCodeChanged();
     }
 }
@@ -30,6 +31,11 @@ void GameManager::procssSocketMessage(QString message) {
 void GameManager::registerUUID(QString uuid) {
     qDebug() << ":: Client: UUID recieved " + uuid;
     clientID = uuid;
+}
+
+void GameManager::joinedLobby(QString lobbyID) {
+    setLobbyRoomCode(lobbyID);
+    emit inGameLobby();
 }
 
 void GameManager::createGameRequest() {

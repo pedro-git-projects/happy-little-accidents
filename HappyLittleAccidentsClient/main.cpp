@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
     QObject::connect(&gameManager, &GameManager::readyToSendNewMessage, &socketHandler, &WebSocketHandler::sendMessageToSever);
 
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("gameManager", &gameManager);
     const QUrl url{ QStringLiteral("qrc:/main.qml") };
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {

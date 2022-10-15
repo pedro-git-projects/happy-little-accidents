@@ -8,6 +8,11 @@ Window {
     visible: true
     title: qsTr("Happy Little Accidents")
 
+    Connections {
+       target: gameManager
+       onInGameLobby: mainLoader.source = "qrc:/ui/LobbyScreen.qml"
+    }
+
     Loader {
        id: mainLoader
        anchors.fill: parent

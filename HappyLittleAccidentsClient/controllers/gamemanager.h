@@ -10,17 +10,19 @@ class GameManager : public QObject {
 public:
     explicit GameManager(QObject *parent = nullptr);
     ~GameManager();
-    QString getLobbyRoomCode();
+    Q_INVOKABLE QString getLobbyRoomCode();
     Q_INVOKABLE void createGameRequest();
 
 public slots:
     void setLobbyRoomCode(QString lobbyCode);
     void procssSocketMessage(QString message);
     void registerUUID(QString uuid);
+    void joinedLobby(QString lobbyID);
 
 signals:
     void lobbyRoomCodeChanged();
     void readyToSendNewMessage(QString message);
+    void inGameLobby();
 
 private:
     QString clientID;
