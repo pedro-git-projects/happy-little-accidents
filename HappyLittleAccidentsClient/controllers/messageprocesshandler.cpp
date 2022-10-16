@@ -25,7 +25,7 @@ void MessageProcessHandler::processMessage(QString message) {
         separated.pop_front();
         if(separated.first().contains("payLoad:")) {
             QString newLobbyID{separated.first()};
-            newLobbyID = newLobbyID.remove("payLoad");
+            newLobbyID = newLobbyID.remove("payLoad:");
             emit newLobby(newLobbyID);
         }
     }
