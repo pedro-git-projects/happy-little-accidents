@@ -12,6 +12,7 @@ public:
     explicit WebSocketHandler(QObject *parent = nullptr);
     ~WebSocketHandler();
     void sendTextMessageToClient(QString message, QString clientID);
+    void sendTextMessageToMultipleClients(QString message, QStringList ids);
 
 signals:
     void newMesssageToProcess(QString message);

@@ -48,6 +48,12 @@ void WebSocketHandler::sendTextMessageToClient(QString message, QString clientID
     }
 }
 
+void WebSocketHandler::sendTextMessageToMultipleClients(QString message, QStringList ids) {
+    foreach(const QString& client, ids) {
+       sendTextMessageToClient(message, client);
+    }
+}
+
 void WebSocketHandler::onSocketDisconnected() {
     auto client = qobject_cast<QWebSocket*>(sender());
     if(client) {

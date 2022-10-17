@@ -28,6 +28,7 @@ void GameManager::joinGameLobbyRequest(QString lobbyID, QString uuid) {
     if(gameLobbyMap.contains(lobbyID)) {
         GameLobbyHandler* existingLobby = gameLobbyMap[lobbyID];
         existingLobby->addClient(uuid);
+        socketHandler->sendTextMessageToMultipleClients("type:updatedClientList;payLoad:" + existingLobby->clientsInLobby(), existingLobby->clientsInLobbyList());
         socketHandler->sendTextMessageToClient("type:joinSuccess;payLoad:" + lobbyID + ";clientList:" + existingLobby->clientsInLobby(), uuid);
     } else {
        socketHandler->sendTextMessageToClient("type:joinError;payload:DNE", uuid);

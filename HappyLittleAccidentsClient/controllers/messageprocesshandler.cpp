@@ -10,6 +10,7 @@ void MessageProcessHandler::processMessage(QString message) {
      * type:uniqueID;payLoad:5555
      * type:newLobbyCreated;payLoad:1111;clientList:1234,4444,5555
      * type:joinSuccess;payLoad:1111;clientList:1234,4444,5555
+     * type:updatedClientList;payLoad:1234,4444,5555
     */
 
     QStringList separated{ message.split(QRegularExpression(";")) };
@@ -39,8 +40,13 @@ void MessageProcessHandler::processMessage(QString message) {
         qDebug() << ":: Client: Clients in lobby: " << lobbyClients;
 
         if(newLobbyID != QString{} && lobbyClients != QStringList{}) {
-           emit newLobby(newLobbyID, lobbyClients);
+            emit newLobby(newLobbyID, lobbyClients);
+        } else if(separated.first() == "type:updatedClientList") {
+            qDebug() << ":: Client: Recieved updated client list";
+            separated.pop_front();
+            QString payLoad{ separated.front() };
+            payLoad = payLoad.remove("payLoad:");
+            emit lobbyListUpdated(payLoad.split(QRegularExpression(",")));
         }
-
-     }
+    }
 }

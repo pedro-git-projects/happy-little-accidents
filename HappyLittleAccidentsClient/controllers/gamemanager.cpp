@@ -12,6 +12,7 @@ GameManager::GameManager(QObject *parent) :
 
     connect(messageProcessHandler, &MessageProcessHandler::uniqueIDRegistration, this, &GameManager::registerUUID);
     connect(messageProcessHandler, &MessageProcessHandler::newLobby, this, &GameManager::joinedLobby);
+    connect(messageProcessHandler, &MessageProcessHandler::lobbyListUpdated, this, &GameManager::setClientsInLobby);
 }
 
 GameManager::~GameManager() {
