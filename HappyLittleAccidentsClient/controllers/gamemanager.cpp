@@ -26,6 +26,11 @@ QStringList GameManager::getClientsInLobby() {
     return clientsInLobby;
 }
 
+void GameManager::joinLobbyRequest(QString lobbyID) {
+    //type:joinGame;payLoad:4000;sender:5555
+    emit readyToSendNewMessage("type:joinGame;payLoad:"+lobbyID+";sender:"+clientID);
+}
+
 void GameManager::setClientsInLobby(QStringList clients) {
    if(clientsInLobby != clients) {
        clientsInLobby = clients;

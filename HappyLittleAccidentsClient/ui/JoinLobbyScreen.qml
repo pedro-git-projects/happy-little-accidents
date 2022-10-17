@@ -55,6 +55,10 @@ Item {
            top: joinLobbyTextBg.bottom
            topMargin: 100
         }
+        onButtonClicked: {
+           if(joinLobbyTextInput !== "")
+               gameManager.joinLobbyRequest(joinLobbyTextInput.text)
+        }
     }
 
     GameButton {

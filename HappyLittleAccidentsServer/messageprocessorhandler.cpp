@@ -35,7 +35,7 @@ void MessageProcessorHandler::processMessage(QString message) {
 
         if(separated.first().contains("payLoad:")) {
             lobbyID = separated.first();
-            lobbyID = lobbyID.remove("payLoad");
+            lobbyID = lobbyID.remove("payLoad:");
         }
         separated.pop_front();
         if(separated.front().contains("sender:")){

@@ -14,6 +14,7 @@ public:
     Q_INVOKABLE QString getLobbyRoomCode();
     Q_INVOKABLE void createGameRequest();
     Q_INVOKABLE QStringList getClientsInLobby();
+    Q_INVOKABLE void joinLobbyRequest(QString lobbyID);
 
 public slots:
     void setLobbyRoomCode(QString lobbyCode);

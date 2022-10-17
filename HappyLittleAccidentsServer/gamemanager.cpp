@@ -17,11 +17,11 @@ GameManager::~GameManager() {
 
 void GameManager::createGameLobbyRequest(QString uuid) {
     QString newLobbyID{ QString::fromStdString(uuid::generateUUId()) };
-    GameLobbyHandler newGameLobby{newLobbyID, this};
-    newGameLobby.addClient(uuid);
-    gameLobbyMap[newLobbyID] = &newGameLobby;
+    GameLobbyHandler* newGameLobby = new GameLobbyHandler(newLobbyID, this);
+    newGameLobby->addClient(uuid);
+    gameLobbyMap[newLobbyID] = newGameLobby;
     qDebug() << ":: Server: New game lobby created - ID: " << newLobbyID  << Qt::endl;
-    socketHandler->sendTextMessageToClient("type:newLobbyCreated;payLoad:" + newLobbyID + ";clientList:" + newGameLobby.clientsInLobby(), uuid);
+    socketHandler->sendTextMessageToClient("type:newLobbyCreated;payLoad:" + newLobbyID + ";clientList:" + newGameLobby->clientsInLobby(), uuid);
 }
 
 void GameManager::joinGameLobbyRequest(QString lobbyID, QString uuid) {
