@@ -37,6 +37,19 @@ Item {
         }
     }
 
+    ListView {
+       id: lobbyRoomList
+       model: gameManager.getClientsInLobby()
+       delegate: Text {
+           anchors.horizontalCenter: parent.horizontalCenter
+           text: modelData
+           font.pixelSize: 36
+           font.bold: true
+           color: "#fbf1c7"
+       }
+       anchors.fill: lobbyRoomListBackGround
+    }
+
     Rectangle {
         id: messageWindowBackground
         radius: 5

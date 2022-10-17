@@ -21,14 +21,14 @@ void GameManager::createGameLobbyRequest(QString uuid) {
     newGameLobby.addClient(uuid);
     gameLobbyMap[newLobbyID] = &newGameLobby;
     qDebug() << ":: Server: New game lobby created - ID: " << newLobbyID  << Qt::endl;
-    socketHandler->sendTextMessageToClient("type:newLobbyCreated;payLoad:" + newLobbyID, uuid);
+    socketHandler->sendTextMessageToClient("type:newLobbyCreated;payLoad:" + newLobbyID + ";clientList:" + newGameLobby.clientsInLobby(), uuid);
 }
 
 void GameManager::joinGameLobbyRequest(QString lobbyID, QString uuid) {
     if(gameLobbyMap.contains(lobbyID)) {
         GameLobbyHandler* existingLobby = gameLobbyMap[lobbyID];
         existingLobby->addClient(uuid);
-        socketHandler->sendTextMessageToClient("type:joinSuccess;payLoad:" + lobbyID, uuid);
+        socketHandler->sendTextMessageToClient("type:joinSuccess;payLoad:" + lobbyID + ";clientList:" + existingLobby->clientsInLobby(), uuid);
     } else {
        socketHandler->sendTextMessageToClient("type:joinError;payload:DNE", uuid);
     }

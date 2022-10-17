@@ -8,6 +8,7 @@ class GameLobbyHandler : public QObject {
 public:
     explicit GameLobbyHandler(QString lobbyID, QObject *parent = nullptr);
     void addClient(QString clientID);
+    QString clientsInLobby();
 
 signals:
 

@@ -1,7 +1,12 @@
 #include "gamemanager.h"
 #include <QDebug>
 
-GameManager::GameManager(QObject *parent) : QObject{parent}, lobbyRoomCode(QString()), clientID{QString{}} {
+GameManager::GameManager(QObject *parent) :
+    QObject{parent},
+    lobbyRoomCode(QString()),
+    clientID{QString{}},
+    clientsInLobby(QStringList())
+{
 
     messageProcessHandler = new MessageProcessHandler{this};
 
@@ -15,6 +20,17 @@ GameManager::~GameManager() {
 
 QString GameManager::getLobbyRoomCode() {
     return lobbyRoomCode;
+}
+
+QStringList GameManager::getClientsInLobby() {
+    return clientsInLobby;
+}
+
+void GameManager::setClientsInLobby(QStringList clients) {
+   if(clientsInLobby != clients) {
+       clientsInLobby = clients;
+       emit clientsInLobbyChanged();
+   }
 }
 
 void GameManager::setLobbyRoomCode(QString lobbyCode) {
@@ -33,8 +49,9 @@ void GameManager::registerUUID(QString uuid) {
     clientID = uuid;
 }
 
-void GameManager::joinedLobby(QString lobbyID) {
+void GameManager::joinedLobby(QString lobbyID, QStringList clients) {
     setLobbyRoomCode(lobbyID);
+    setClientsInLobby(clients);
     emit inGameLobby();
 }
 

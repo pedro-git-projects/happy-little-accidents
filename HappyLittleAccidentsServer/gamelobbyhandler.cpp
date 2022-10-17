@@ -9,3 +9,10 @@ void GameLobbyHandler::addClient(QString clientID) {
        gameClientList.append(clientID);
     }
 }
+
+QString GameLobbyHandler::clientsInLobby() {
+    QString ret{};
+    foreach (const QString& client, gameClientList) ret.append(client + ",");
+    ret.chop(1);
+    return ret;
+}
