@@ -50,7 +50,7 @@ Item {
         buttonTextPixelSize: 48
         width: 336
         height: 105
-        // onButtonClicked: mainLoader.source = "qrc:/ui/GameSelectScreen.qml"
+        onButtonClicked: mainLoader.source = "qrc:/ui/JoinLobbyScreen.qml"
     }
 
     GameButton {
