@@ -6,8 +6,8 @@
 
 class GameManager : public QObject {
     Q_OBJECT
-    Q_PROPERTY(QString lobbyRoomCode)
-    Q_PROPERTY(QStringList clientsInLobby)
+    Q_PROPERTY(QString lobbyRoomCode READ getLobbyRoomCode WRITE setLobbyRoomCode NOTIFY lobbyRoomCodeChanged)
+    Q_PROPERTY(QStringList clientsInLobby READ getClientsInLobby WRITE setClientsInLobby NOTIFY clientsInLobbyChanged)
 public:
     explicit GameManager(QObject *parent = nullptr);
     ~GameManager();

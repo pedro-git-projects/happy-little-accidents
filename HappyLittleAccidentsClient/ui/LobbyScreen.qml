@@ -20,7 +20,7 @@ Item {
             horizontalCenter: parent.horizontalCenter
         }
         color: "#fbf1c7"
-        text: "Lobby Code:" + gameManager.getLobbyRoomCode()
+        text: "Lobby Code:" + gameManager.lobbyRoomCode
     }
 
     Rectangle {
@@ -39,7 +39,7 @@ Item {
 
     ListView {
        id: lobbyRoomList
-       model: gameManager.getClientsInLobby()
+       model: gameManager.clientsInLobby
        delegate: Text {
            anchors.horizontalCenter: parent.horizontalCenter
            text: modelData

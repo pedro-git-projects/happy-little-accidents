@@ -33,9 +33,9 @@ void GameManager::joinLobbyRequest(QString lobbyID) {
 }
 
 void GameManager::setClientsInLobby(QStringList clients) {
-   if(clientsInLobby != clients) {
-       clientsInLobby = clients;
-       emit clientsInLobbyChanged();
+   if(this->clientsInLobby != clients) {
+       this->clientsInLobby = clients;
+       emit  this->clientsInLobbyChanged();
    }
 }
 

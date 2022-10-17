@@ -18,14 +18,14 @@ int main(int argc, char *argv[])
 
     GameManager gameManager;
 
-    QObject::connect(&socketHandler, &WebSocketHandler::newMessageReadyFOrProcessing, &gameManager, &GameManager::procssSocketMessage);
+    QObject::connect(&socketHandler, &WebSocketHandler::newMessageReadyForProcessing, &gameManager, &GameManager::procssSocketMessage);
     QObject::connect(&gameManager, &GameManager::readyToSendNewMessage, &socketHandler, &WebSocketHandler::sendMessageToSever);
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("gameManager", &gameManager);
     const QUrl url{ QStringLiteral("qrc:/main.qml") };
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, [url](QObject *obj, const QUrl &objUrl) {
+             &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);

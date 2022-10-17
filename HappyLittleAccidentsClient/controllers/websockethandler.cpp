@@ -19,7 +19,7 @@ void WebSocketHandler::onConnected() {
 
 void WebSocketHandler::onTextMessageRecieved(QString message) {
     qDebug() << ":: Client: Recieved message " << message;
-    emit newMessageReadyFOrProcessing(message);
+    emit newMessageReadyForProcessing(message);
 }
 
 void WebSocketHandler::sendMessageToSever(QString message) {

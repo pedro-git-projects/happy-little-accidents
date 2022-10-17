@@ -41,12 +41,14 @@ void MessageProcessHandler::processMessage(QString message) {
 
         if(newLobbyID != QString{} && lobbyClients != QStringList{}) {
             emit newLobby(newLobbyID, lobbyClients);
-        } else if(separated.first() == "type:updatedClientList") {
-            qDebug() << ":: Client: Recieved updated client list";
-            separated.pop_front();
-            QString payLoad{ separated.front() };
-            payLoad = payLoad.remove("payLoad:");
-            emit lobbyListUpdated(payLoad.split(QRegularExpression(",")));
         }
     }
+    else if(separated.first() == "type:updatedClientList") {
+        qDebug() << ":: Client: Recieved updated client list";
+        separated.pop_front();
+        QString payLoad{ separated.front() };
+        payLoad = payLoad.remove("payLoad:");
+        emit lobbyListUpdated(payLoad.split(QRegularExpression(",")));
+    }
+
 }

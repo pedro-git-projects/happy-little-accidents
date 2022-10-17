@@ -12,7 +12,7 @@ public:
     Q_INVOKABLE void connectToServer(QString hostAddress);
 
 signals:
-    void newMessageReadyFOrProcessing(QString message);
+    void newMessageReadyForProcessing(QString message);
 
 public slots:
     void onConnected();
