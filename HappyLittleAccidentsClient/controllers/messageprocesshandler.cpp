@@ -11,6 +11,7 @@ void MessageProcessHandler::processMessage(QString message) {
      * type:newLobbyCreated;payLoad:1111;clientList:1234,4444,5555
      * type:joinSuccess;payLoad:1111;clientList:1234,4444,5555
      * type:updatedClientList;payLoad:1234,4444,5555
+     * type:lobbyMessage;payLoad:message:message;sender:1234;senderID:4444
     */
 
     QStringList separated{ message.split(QRegularExpression(";")) };
@@ -49,6 +50,22 @@ void MessageProcessHandler::processMessage(QString message) {
         QString payLoad{ separated.front() };
         payLoad = payLoad.remove("payLoad:");
         emit lobbyListUpdated(payLoad.split(QRegularExpression(",")));
+    }
+    else if(separated.first() == "type:lobbyMessage") {
+        QString newMessage{};
+        QString senderID{};
+        separated.pop_front();
+        if(separated.front().contains("payLoad:")) {
+            newMessage = separated.front();
+            newMessage = newMessage.remove("payLoad:");
+        }
+       separated.pop_front();
+        if(separated.front().contains("sender:")) {
+            senderID = separated.front();
+            senderID = senderID.remove("sender:");
+        }
+        QString displayMessage{senderID + ": " + newMessage};
+        emit newLobbyMessage(displayMessage);
     }
 
 }

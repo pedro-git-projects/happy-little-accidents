@@ -8,9 +8,9 @@ MessageProcessorHandler::MessageProcessorHandler(QObject *parent) : QObject{pare
 
 void MessageProcessorHandler::processMessage(QString message) {
     /*
-        type:createGame;payLoad:0;sender:5555
-        type:joinGame;payLoad:4000;sender:5555
-        type:message;payLoad:Message;sender5555
+    type:createGame;payLoad:0;sender:5555
+    type:joinGame;payLoad:4000;sender:5555
+    type:message;payLoad:Message;lobbyID:4590;sender5555
     */
 
     QStringList separated = message.split( QRegularExpression(";"));
@@ -45,5 +45,32 @@ void MessageProcessorHandler::processMessage(QString message) {
         if(lobbyID != QString{} && senderID != QString{}) emit joinGameLobbyRequest(lobbyID, senderID);
     }
 
-    if(separated.first() == "message") qDebug() << ":: Server message request";
+    if(separated.first() == "type:message") {
+        qDebug() << ":: Server: Lobby message request";
+        QString payLoad{};
+        QString lobbyID{};
+        QString senderID{};
+
+        separated.pop_front();
+        if(separated.front().contains("payLoad:")) {
+            payLoad = separated.front();
+            payLoad = payLoad.remove("payLoad:");
+        }
+
+        separated.pop_front();
+        if(separated.front().contains("lobbyID:")) {
+            lobbyID = separated.front();
+            lobbyID = lobbyID.remove("lobbyID:");
+        }
+
+        separated.pop_front();
+        if(separated.front().contains("sender:")) {
+            senderID = separated.front();
+            senderID = senderID.remove("sender:");
+        }
+
+        if(payLoad != QString{} && lobbyID != QString{} && senderID != QString{}) {
+           emit messageLobbyRequest(payLoad, lobbyID, senderID);
+        }
+    }
 }

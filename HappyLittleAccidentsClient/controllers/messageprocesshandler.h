@@ -13,6 +13,7 @@ signals:
     void uniqueIDRegistration(QString uniqueID);
     void newLobby(QString lobbyID, QStringList clients);
     void lobbyListUpdated(QStringList clients);
+    void newLobbyMessage(QString message);
 };
 
 #endif // MESSAGEPROCESSHANDLER_H

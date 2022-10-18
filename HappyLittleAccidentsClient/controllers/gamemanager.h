@@ -15,6 +15,7 @@ public:
     Q_INVOKABLE void createGameRequest();
     Q_INVOKABLE QStringList getClientsInLobby();
     Q_INVOKABLE void joinLobbyRequest(QString lobbyID);
+    Q_INVOKABLE void sendMessageToLobby(QString message);
 
 public slots:
     void setLobbyRoomCode(QString lobbyCode);
@@ -28,6 +29,7 @@ signals:
     void readyToSendNewMessage(QString message);
     void inGameLobby();
     void clientsInLobbyChanged();
+    void newLobbyMessage(QString message);
 
 private:
     QString clientID;

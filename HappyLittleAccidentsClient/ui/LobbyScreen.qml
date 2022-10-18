@@ -64,6 +64,19 @@ Item {
         }
     }
 
+    TextEdit {
+       id: messageWindow
+       anchors.fill: messageWindowBackground
+       color: "#fbf1c7"
+       font.pixelSize: 24
+       readOnly: true
+    }
+
+    Connections {
+       target: gameManager
+       onNewLobbyMessage: messageWindow.append(message)
+    }
+
     GameButton {
         id: buttonReady
         buttonText: "Ready"
@@ -89,6 +102,10 @@ Item {
             bottom: buttonReady.bottom
             right: messageWindowBackground.right
         }
+        onButtonClicked: {
+           gameManager.sendMessageToLobby(sendTextInput.text)
+            sendTextInput.text = ""
+        }
     }
 
     Rectangle {
@@ -105,12 +122,16 @@ Item {
     }
 
 
-    TextEdit {
-        id: editSendText
+    TextInput {
+        id: sendTextInput
         anchors.fill: sendTextFieldBackground
         font.pixelSize: 36
         color: "#fbf1c7"
         clip: true
+        onAccepted: {
+            gameManager.sendMessageToLobby(sendTextInput.text)
+            sendTextInput.text = ""
+        }
     }
 
 }

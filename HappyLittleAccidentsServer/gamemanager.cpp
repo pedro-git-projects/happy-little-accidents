@@ -8,6 +8,7 @@ GameManager::GameManager(QObject *parent) : QObject{parent} {
     connect(socketHandler, &WebSocketHandler::newMesssageToProcess, messageProcessHandler, &MessageProcessorHandler::processMessage);
     connect(messageProcessHandler, &MessageProcessorHandler::createGameRequest, this, &GameManager::createGameLobbyRequest);
     connect(messageProcessHandler, &MessageProcessorHandler::joinGameLobbyRequest, this, &GameManager::joinGameLobbyRequest);
+    connect(messageProcessHandler, &MessageProcessorHandler::messageLobbyRequest, this, &GameManager::messageLobbyRequest);
 }
 
 
@@ -32,5 +33,12 @@ void GameManager::joinGameLobbyRequest(QString lobbyID, QString uuid) {
         socketHandler->sendTextMessageToClient("type:joinSuccess;payLoad:" + lobbyID + ";clientList:" + existingLobby->clientsInLobby(), uuid);
     } else {
        socketHandler->sendTextMessageToClient("type:joinError;payload:DNE", uuid);
+    }
+}
+
+void GameManager::messageLobbyRequest(QString message, QString lobbyID, QString senderID) {
+    if(gameLobbyMap.contains(lobbyID)) {
+       GameLobbyHandler* existingLobby = gameLobbyMap[lobbyID];
+       socketHandler->sendTextMessageToMultipleClients("type:lobbyMessage;payLoad:" + message + ";sender:" + senderID, existingLobby->clientsInLobbyList());
     }
 }

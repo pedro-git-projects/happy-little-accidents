@@ -2,7 +2,7 @@
 #include <QDebug>
 
 GameManager::GameManager(QObject *parent) :
-    QObject{parent},
+    QObject{ parent },
     lobbyRoomCode(QString()),
     clientID{QString{}},
     clientsInLobby(QStringList())
@@ -13,6 +13,7 @@ GameManager::GameManager(QObject *parent) :
     connect(messageProcessHandler, &MessageProcessHandler::uniqueIDRegistration, this, &GameManager::registerUUID);
     connect(messageProcessHandler, &MessageProcessHandler::newLobby, this, &GameManager::joinedLobby);
     connect(messageProcessHandler, &MessageProcessHandler::lobbyListUpdated, this, &GameManager::setClientsInLobby);
+    connect(messageProcessHandler, &MessageProcessHandler::newLobbyMessage, this, &GameManager::newLobbyMessage);
 }
 
 GameManager::~GameManager() {
@@ -28,8 +29,13 @@ QStringList GameManager::getClientsInLobby() {
 }
 
 void GameManager::joinLobbyRequest(QString lobbyID) {
-    //type:joinGame;payLoad:4000;sender:5555
+    // type:joinGame;payLoad:4000;sender:5555
     emit readyToSendNewMessage("type:joinGame;payLoad:"+lobbyID+";sender:"+clientID);
+}
+
+void GameManager::sendMessageToLobby(QString message) {
+   // type:message;payLoad:Message;lobbyID:4590;sender5555
+    emit readyToSendNewMessage("type:message;payLoad:" + message + ";lobbyID:" + lobbyRoomCode + ";sender:" + clientID);
 }
 
 void GameManager::setClientsInLobby(QStringList clients) {
