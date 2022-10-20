@@ -5,7 +5,8 @@ GameManager::GameManager(QObject *parent) :
     QObject{ parent },
     lobbyRoomCode(QString()),
     clientID{QString{}},
-    clientsInLobby(QStringList())
+    clientsInLobby(QStringList()),
+    readyClientsList{QStringList{}}
 {
 
     messageProcessHandler = new MessageProcessHandler{this};
@@ -14,6 +15,7 @@ GameManager::GameManager(QObject *parent) :
     connect(messageProcessHandler, &MessageProcessHandler::newLobby, this, &GameManager::joinedLobby);
     connect(messageProcessHandler, &MessageProcessHandler::lobbyListUpdated, this, &GameManager::setClientsInLobby);
     connect(messageProcessHandler, &MessageProcessHandler::newLobbyMessage, this, &GameManager::newLobbyMessage);
+    connect(messageProcessHandler, &MessageProcessHandler::readyListChanged, this, &GameManager::newClientReadyList);
 }
 
 GameManager::~GameManager() {
@@ -38,11 +40,28 @@ void GameManager::sendMessageToLobby(QString message) {
     emit readyToSendNewMessage("type:message;payLoad:" + message + ";lobbyID:" + lobbyRoomCode + ";sender:" + clientID);
 }
 
+bool GameManager::isClientReady(QString clientID) {
+    return this->readyClientsList.contains(clientID);
+}
+
+void GameManager::readyToPlay() {
+    //type:readyToPlay;payLoad:1;sender:5555
+    emit readyToSendNewMessage("type:readyToPlay;payLoad:1;sender:" + clientID);
+}
+
 void GameManager::setClientsInLobby(QStringList clients) {
    if(this->clientsInLobby != clients) {
        this->clientsInLobby = clients;
        emit  this->clientsInLobbyChanged();
    }
+}
+
+void GameManager::newClientReadyList(QStringList readyClients) {
+    if(readyClientsList != readyClients) {
+        readyClientsList = readyClients;
+        emit readyListChanged();
+    }
+
 }
 
 void GameManager::setLobbyRoomCode(QString lobbyCode) {

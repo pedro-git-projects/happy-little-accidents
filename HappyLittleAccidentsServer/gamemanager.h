@@ -17,6 +17,8 @@ public slots:
     void createGameLobbyRequest(QString uuid);
     void joinGameLobbyRequest(QString lobbyID, QString uuid);
     void messageLobbyRequest(QString message, QString lobbyID, QString senderID);
+    void userReadyListChanged();
+    void userReadyToPlay(QString uuid);
 
 signals:
 

@@ -5,6 +5,7 @@ MessageProcessHandler::MessageProcessHandler(QObject *parent) : QObject{parent} 
 
 }
 
+// TODO: Create function to remove "payLoad" create function for each case
 void MessageProcessHandler::processMessage(QString message) {
     /*
      * type:uniqueID;payLoad:5555
@@ -12,6 +13,7 @@ void MessageProcessHandler::processMessage(QString message) {
      * type:joinSuccess;payLoad:1111;clientList:1234,4444,5555
      * type:updatedClientList;payLoad:1234,4444,5555
      * type:lobbyMessage;payLoad:message:message;sender:1234;senderID:4444
+     *  type:readyListChanged;payLoad:;
     */
 
     QStringList separated{ message.split(QRegularExpression(";")) };
@@ -66,6 +68,14 @@ void MessageProcessHandler::processMessage(QString message) {
         }
         QString displayMessage{senderID + ": " + newMessage};
         emit newLobbyMessage(displayMessage);
+    }
+    else if(separated.first() == "type:readyListChanged") {
+       separated.pop_front();
+       QString payLoad = separated.front();
+       payLoad = payLoad.remove("payLoad:");
+       QStringList readyClients = payLoad.split(QRegularExpression(","));
+
+       emit readyListChanged(readyClients);
     }
 
 }

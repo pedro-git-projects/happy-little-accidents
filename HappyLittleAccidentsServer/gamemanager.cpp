@@ -9,6 +9,7 @@ GameManager::GameManager(QObject *parent) : QObject{parent} {
     connect(messageProcessHandler, &MessageProcessorHandler::createGameRequest, this, &GameManager::createGameLobbyRequest);
     connect(messageProcessHandler, &MessageProcessorHandler::joinGameLobbyRequest, this, &GameManager::joinGameLobbyRequest);
     connect(messageProcessHandler, &MessageProcessorHandler::messageLobbyRequest, this, &GameManager::messageLobbyRequest);
+    connect(messageProcessHandler, &MessageProcessorHandler::clientReadyToPlay, this, &GameManager::userReadyToPlay);
 }
 
 
@@ -19,8 +20,12 @@ GameManager::~GameManager() {
 void GameManager::createGameLobbyRequest(QString uuid) {
     QString newLobbyID{ QString::fromStdString(uuid::generateUUId()) };
     GameLobbyHandler* newGameLobby = new GameLobbyHandler(newLobbyID, this);
+
+    connect(newGameLobby, &GameLobbyHandler::userReadyListChanged, this, &GameManager::userReadyListChanged);
+
     newGameLobby->addClient(uuid);
     gameLobbyMap[newLobbyID] = newGameLobby;
+
     qDebug() << ":: Server: New game lobby created - ID: " << newLobbyID  << Qt::endl;
     socketHandler->sendTextMessageToClient("type:newLobbyCreated;payLoad:" + newLobbyID + ";clientList:" + newGameLobby->clientsInLobby(), uuid);
 }
@@ -40,5 +45,19 @@ void GameManager::messageLobbyRequest(QString message, QString lobbyID, QString 
     if(gameLobbyMap.contains(lobbyID)) {
        GameLobbyHandler* existingLobby = gameLobbyMap[lobbyID];
        socketHandler->sendTextMessageToMultipleClients("type:lobbyMessage;payLoad:" + message + ";sender:" + senderID, existingLobby->clientsInLobbyList());
+    }
+}
+
+
+void GameManager::userReadyListChanged() {
+    GameLobbyHandler* existingLobby = qobject_cast<GameLobbyHandler*>(sender());
+    socketHandler->sendTextMessageToMultipleClients("type:readyListChanged;payLoad:" + existingLobby->whoIsReady(), existingLobby->clientsInLobbyList());
+}
+
+void GameManager::userReadyToPlay(QString uuid) {
+    qDebug() << "::Server: User is ready: " << uuid;
+    QList<GameLobbyHandler*> gameLobbyList = gameLobbyMap.values();
+    foreach(GameLobbyHandler* existingLobby, gameLobbyList) {
+        existingLobby->userReadyToPlay(uuid);
     }
 }

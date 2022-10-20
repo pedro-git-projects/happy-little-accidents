@@ -6,5 +6,6 @@
         <file>ui/GameSelectScreen.qml</file>
         <file>ui/LobbyScreen.qml</file>
         <file>ui/JoinLobbyScreen.qml</file>
+        <file>ui/assets/check.png</file>
     </qresource>
 </RCC>

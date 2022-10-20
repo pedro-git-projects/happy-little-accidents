@@ -16,6 +16,8 @@ public:
     Q_INVOKABLE QStringList getClientsInLobby();
     Q_INVOKABLE void joinLobbyRequest(QString lobbyID);
     Q_INVOKABLE void sendMessageToLobby(QString message);
+    Q_INVOKABLE bool isClientReady(QString clientID);
+    Q_INVOKABLE void readyToPlay();
 
 public slots:
     void setLobbyRoomCode(QString lobbyCode);
@@ -23,6 +25,7 @@ public slots:
     void registerUUID(QString uuid);
     void joinedLobby(QString lobbyID, QStringList clients);
     void setClientsInLobby(QStringList clientList);
+    void newClientReadyList(QStringList readyClients);
 
 signals:
     void lobbyRoomCodeChanged();
@@ -30,12 +33,14 @@ signals:
     void inGameLobby();
     void clientsInLobbyChanged();
     void newLobbyMessage(QString message);
+    void readyListChanged();
 
 private:
     QString clientID;
     QString lobbyRoomCode;
     MessageProcessHandler* messageProcessHandler;
     QStringList clientsInLobby;
+    QStringList readyClientsList;
 
 };
 

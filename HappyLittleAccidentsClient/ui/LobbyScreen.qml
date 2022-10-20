@@ -41,11 +41,31 @@ Item {
        id: lobbyRoomList
        model: gameManager.clientsInLobby
        delegate: Text {
+           id: userID
            anchors.horizontalCenter: parent.horizontalCenter
            text: modelData
            font.pixelSize: 36
            font.bold: true
            color: "#fbf1c7"
+
+           Image {
+               id: checkImage
+               visible: gameManager.isClientReady(modelData)
+               Connections {
+                   target: gameManager
+                   onReadyListChanged: checkImage.visible = gameManager.isClientReady(modelData)
+               }
+               anchors {
+                  left: userID.right
+                  leftMargin: 15
+                  verticalCenter: userID.verticalCenter
+               }
+
+               source: "qrc:/ui/assets/check.png"
+               width: 40
+               height: 40
+               fillMode: Image.PreserveAspectFit
+          }
        }
        anchors.fill: lobbyRoomListBackGround
     }
@@ -81,7 +101,7 @@ Item {
         id: buttonReady
         buttonText: "Ready"
         buttonTextPixelSize: 36
-        width: 314
+        width: 157
         height: 80
 
         anchors {
@@ -89,6 +109,8 @@ Item {
             topMargin: 20
             horizontalCenter: lobbyRoomListBackGround.horizontalCenter
         }
+
+        onButtonClicked: gameManager.readyToPlay()
     }
 
     GameButton {

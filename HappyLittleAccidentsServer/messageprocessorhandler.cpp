@@ -11,6 +11,7 @@ void MessageProcessorHandler::processMessage(QString message) {
     type:createGame;payLoad:0;sender:5555
     type:joinGame;payLoad:4000;sender:5555
     type:message;payLoad:Message;lobbyID:4590;sender5555
+    type:readyToPlay;payLoad:1;sender:5555
     */
 
     QStringList separated = message.split( QRegularExpression(";"));
@@ -70,7 +71,15 @@ void MessageProcessorHandler::processMessage(QString message) {
         }
 
         if(payLoad != QString{} && lobbyID != QString{} && senderID != QString{}) {
-           emit messageLobbyRequest(payLoad, lobbyID, senderID);
+            emit messageLobbyRequest(payLoad, lobbyID, senderID);
+        }
+    }
+    else if(separated.front() == "type:readyToPlay") {
+        //type:readyToPlay;payLoad:1;sender:5555
+        if(separated.back().contains("sender:")) {
+            QString clientID = separated.back();
+            clientID = clientID.remove("sender:");
+            emit clientReadyToPlay(clientID);
         }
     }
 }
