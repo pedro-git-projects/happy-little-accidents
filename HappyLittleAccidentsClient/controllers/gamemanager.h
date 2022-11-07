@@ -34,6 +34,7 @@ signals:
     void clientsInLobbyChanged();
     void newLobbyMessage(QString message);
     void readyListChanged();
+    void gameStarting();
 
 private:
     QString clientID;

@@ -11,6 +11,7 @@ Window {
     Connections {
        target: gameManager
        onInGameLobby: mainLoader.source = "qrc:/ui/LobbyScreen.qml"
+       onGameStarting: mainLoader.source = "qrc:/ui/DrawingScreen.qml"
     }
 
     Loader {

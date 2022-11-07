@@ -22,7 +22,7 @@ WebSocketHandler::~WebSocketHandler() {
 void WebSocketHandler::onNewSocketConnection() {
     qDebug() << ":: Server: New client connected";
 
-    QString newClientID = QString::fromStdString(uuid::generateUUId());
+    QString newClientID{ QString::fromStdString(uuid::generateUUId()) };
 
     auto nextClient = socketServer->nextPendingConnection();
     nextClient->setParent(this);

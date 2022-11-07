@@ -3,9 +3,9 @@
 
 GameManager::GameManager(QObject *parent) :
     QObject{ parent },
-    lobbyRoomCode(QString()),
+    lobbyRoomCode{QString{}},
     clientID{QString{}},
-    clientsInLobby(QStringList()),
+    clientsInLobby{QStringList{}},
     readyClientsList{QStringList{}}
 {
 
@@ -16,6 +16,7 @@ GameManager::GameManager(QObject *parent) :
     connect(messageProcessHandler, &MessageProcessHandler::lobbyListUpdated, this, &GameManager::setClientsInLobby);
     connect(messageProcessHandler, &MessageProcessHandler::newLobbyMessage, this, &GameManager::newLobbyMessage);
     connect(messageProcessHandler, &MessageProcessHandler::readyListChanged, this, &GameManager::newClientReadyList);
+    connect(messageProcessHandler, &MessageProcessHandler::gameStarting, this, &GameManager::gameStarting);
 }
 
 GameManager::~GameManager() {
@@ -50,9 +51,9 @@ void GameManager::readyToPlay() {
 }
 
 void GameManager::setClientsInLobby(QStringList clients) {
-   if(this->clientsInLobby != clients) {
-       this->clientsInLobby = clients;
-       emit  this->clientsInLobbyChanged();
+   if(clientsInLobby != clients) {
+       clientsInLobby = clients;
+       emit clientsInLobbyChanged();
    }
 }
 
@@ -61,7 +62,6 @@ void GameManager::newClientReadyList(QStringList readyClients) {
         readyClientsList = readyClients;
         emit readyListChanged();
     }
-
 }
 
 void GameManager::setLobbyRoomCode(QString lobbyCode) {

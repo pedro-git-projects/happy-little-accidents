@@ -15,6 +15,7 @@ signals:
     void lobbyListUpdated(QStringList clients);
     void newLobbyMessage(QString message);
     void readyListChanged(QStringList readyList);
+    void gameStarting();
 };
 
 #endif // MESSAGEPROCESSHANDLER_H

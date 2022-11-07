@@ -30,23 +30,30 @@ QStringList GameLobbyHandler::clientsInLobbyList() {
 }
 
 void GameLobbyHandler::userReadyToPlay(QString clientID) {
-    if(gameClientList.contains(clientID)) {
-       clientReadyList[clientID] = true;
-       emit userReadyListChanged();
+    if(this->gameClientList.contains(clientID)) {
+       this->clientReadyList[clientID] = true;
+        emit userReadyListChanged();
+        bool notReady{false};
+        foreach(const QString& clientID, this->clientReadyList.keys()) {
+            if(!this->clientReadyList[clientID]) {
+                notReady = true;
+            }
+
+        }
+       if(!notReady) {
+               emit gameReadyToBegin();
+       }
     }
 
 }
 
 QString GameLobbyHandler::whoIsReady() {
     QString returnValue{};
-    QStringList clientsReadyList = clientReadyList.keys();
-    for(int index = 0; index < clientsReadyList.size(); index++) {
-        QString clientID = clientsReadyList[index];
-        if(this->clientReadyList[clientID]) {
+    foreach(const QString& clientID, this->clientReadyList.keys()) {
+        if(clientReadyList[clientID]) {
             returnValue.append(clientID + ",");
-        }
+         }
     }
-
-    if(returnValue != QString{}) returnValue.chop(1);
+    if(returnValue != QString{}) { returnValue.chop(1); }
     return returnValue;
 }

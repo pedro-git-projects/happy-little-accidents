@@ -14,9 +14,10 @@ void MessageProcessorHandler::processMessage(QString message) {
     type:readyToPlay;payLoad:1;sender:5555
     */
 
-    QStringList separated = message.split( QRegularExpression(";"));
+    QStringList separated{ message.split( QRegularExpression(";")) };
 
     if(separated.first() == "type:createGame") {
+        // Create Game
         qDebug() << ":: Server: Create game request";
 
         separated.pop_front();
@@ -28,7 +29,8 @@ void MessageProcessorHandler::processMessage(QString message) {
         }
     }
 
-    if(separated.first() == "type:joinGame") {
+    else if(separated.first() == "type:joinGame") {
+        // Join Game
         qDebug() << ":: Server: Join game request";
         separated.pop_front();
         QString lobbyID{};
@@ -46,7 +48,8 @@ void MessageProcessorHandler::processMessage(QString message) {
         if(lobbyID != QString{} && senderID != QString{}) emit joinGameLobbyRequest(lobbyID, senderID);
     }
 
-    if(separated.first() == "type:message") {
+    else if(separated.first() == "type:message") {
+        // message lobby
         qDebug() << ":: Server: Lobby message request";
         QString payLoad{};
         QString lobbyID{};
@@ -74,12 +77,14 @@ void MessageProcessorHandler::processMessage(QString message) {
             emit messageLobbyRequest(payLoad, lobbyID, senderID);
         }
     }
+
     else if(separated.front() == "type:readyToPlay") {
-        //type:readyToPlay;payLoad:1;sender:5555
+        // ready to play
         if(separated.back().contains("sender:")) {
-            QString clientID = separated.back();
+            QString clientID{separated.back()};
             clientID = clientID.remove("sender:");
             emit clientReadyToPlay(clientID);
         }
     }
 }
+

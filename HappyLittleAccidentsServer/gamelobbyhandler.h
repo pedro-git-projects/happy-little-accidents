@@ -16,6 +16,7 @@ public:
 
 signals:
     void userReadyListChanged();
+    void gameReadyToBegin();
 
 private:
     QList<QString> gameClientList;

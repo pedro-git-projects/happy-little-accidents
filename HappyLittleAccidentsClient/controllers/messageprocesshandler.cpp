@@ -13,7 +13,9 @@ void MessageProcessHandler::processMessage(QString message) {
      * type:joinSuccess;payLoad:1111;clientList:1234,4444,5555
      * type:updatedClientList;payLoad:1234,4444,5555
      * type:lobbyMessage;payLoad:message:message;sender:1234;senderID:4444
-     *  type:readyListChanged;payLoad:;
+     * type:readyListChanged;payLoad:;
+     * type:gameReadyToBegin;payLoad:0
+     *
     */
 
     QStringList separated{ message.split(QRegularExpression(";")) };
@@ -24,7 +26,8 @@ void MessageProcessHandler::processMessage(QString message) {
             newClientID = newClientID.remove("payLoad:");
             emit uniqueIDRegistration(newClientID);
         }
-    } else if (separated.first() == "type:newLobbyCreated" || separated.first() == "type:joinSuccess") {
+    }
+    else if (separated.first() == "type:newLobbyCreated" || separated.first() == "type:joinSuccess") {
         qDebug() << ":: Client: client joined lobby";
         separated.pop_front();
         QString newLobbyID{};
@@ -71,11 +74,13 @@ void MessageProcessHandler::processMessage(QString message) {
     }
     else if(separated.first() == "type:readyListChanged") {
        separated.pop_front();
-       QString payLoad = separated.front();
+       QString payLoad{ separated.front() };
        payLoad = payLoad.remove("payLoad:");
        QStringList readyClients = payLoad.split(QRegularExpression(","));
-
        emit readyListChanged(readyClients);
+    }
+    else if(separated.first() == "type:gameReadyToBegin") {
+        emit gameStarting();
     }
 
 }
