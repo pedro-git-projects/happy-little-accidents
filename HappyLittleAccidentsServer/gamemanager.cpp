@@ -10,6 +10,7 @@ GameManager::GameManager(QObject *parent) : QObject{parent} {
     connect(messageProcessHandler, &MessageProcessorHandler::joinGameLobbyRequest, this, &GameManager::joinGameLobbyRequest);
     connect(messageProcessHandler, &MessageProcessorHandler::messageLobbyRequest, this, &GameManager::messageLobbyRequest);
     connect(messageProcessHandler, &MessageProcessorHandler::clientReadyToPlay, this, &GameManager::userReadyToPlay);
+    connect(messageProcessHandler, &MessageProcessorHandler::newDrawingData , this, &GameManager::newDrawingDataReady);
 }
 
 
@@ -23,6 +24,7 @@ void GameManager::createGameLobbyRequest(QString uuid) {
 
     connect(newGameLobby, &GameLobbyHandler::userReadyListChanged, this, &GameManager::userReadyListChanged);
     connect(newGameLobby, &GameLobbyHandler::gameReadyToBegin, this, &GameManager::gameReadyToBegin);
+    connect(newGameLobby, &GameLobbyHandler::allDrawingsRecieved, this, &GameManager::allDrawingsInGameLobbyRecieved);
 
     newGameLobby->addClient(uuid);
     gameLobbyMap[newLobbyID] = newGameLobby;
@@ -67,4 +69,21 @@ void GameManager::gameReadyToBegin() {
     GameLobbyHandler* existingLobby = qobject_cast<GameLobbyHandler*>(sender());
     // type:gameReadyToBegin;payLoad:0
     socketHandler->sendTextMessageToMultipleClients("type:gameReadyToBegin;payLoad:0", existingLobby->clientsInLobbyList());
+}
+
+
+void GameManager::newDrawingDataReady(QString fileData, QString clientID) {
+    QList<GameLobbyHandler*> gameLobbyList = gameLobbyMap.values();
+    foreach(GameLobbyHandler* existingLobby, gameLobbyList) {
+       existingLobby->newDrawingData(fileData, clientID);
+    }
+}
+
+void GameManager::allDrawingsInGameLobbyRecieved(QMap<QString, QString> sharedMap) {
+    GameLobbyHandler* existingLobby{qobject_cast<GameLobbyHandler*>(sender())};
+    //type:drawingPrompt;payLoad:drawingData;prompt:dog
+    foreach(const QString& client, sharedMap.keys()) {
+        QString dataPacket{"type:drawingPrompt;payLoad:" + sharedMap[client] + ";prompt:" + existingLobby->prompt()};
+        socketHandler->sendTextMessageToClient(dataPacket, client);
+    }
 }

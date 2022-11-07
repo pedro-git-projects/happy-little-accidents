@@ -18,6 +18,7 @@ public:
     Q_INVOKABLE void sendMessageToLobby(QString message);
     Q_INVOKABLE bool isClientReady(QString clientID);
     Q_INVOKABLE void readyToPlay();
+    Q_INVOKABLE void drawingFinished();
 
 public slots:
     void setLobbyRoomCode(QString lobbyCode);

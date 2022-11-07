@@ -15,7 +15,7 @@ Item {
         font.bold: true
         anchors.horizontalCenter: parent.horizontalCenter
         anchors {
-            top: parent.topo
+            top: parent.top
             topMargin: 40
             horizontalCenter: parent.horizontalCenter
         }

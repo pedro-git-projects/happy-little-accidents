@@ -1,5 +1,6 @@
 #include "gamemanager.h"
 #include <QDebug>
+#include <QFile>
 
 GameManager::GameManager(QObject *parent) :
     QObject{ parent },
@@ -48,6 +49,26 @@ bool GameManager::isClientReady(QString clientID) {
 void GameManager::readyToPlay() {
     //type:readyToPlay;payLoad:1;sender:5555
     emit readyToSendNewMessage("type:readyToPlay;payLoad:1;sender:" + clientID);
+}
+
+void GameManager::drawingFinished() {
+    /*
+       open the canvas png
+       load the data into a qbyte array
+       create a packet
+       send packet to server
+    */
+
+    QFile imageFile{ "temp.png" };
+    if(!imageFile.open(QIODevice::ReadOnly)) return;
+
+    QByteArray fileData{ imageFile.readAll() };
+    imageFile.close();
+
+    // type:drawingData;payLoad:fileData;sender:clientID
+    QString dataPacket{ "type:drawingData;payLoad:" + fileData.toHex() + ";sender:" + clientID };
+    emit readyToSendNewMessage(dataPacket);
+
 }
 
 void GameManager::setClientsInLobby(QStringList clients) {

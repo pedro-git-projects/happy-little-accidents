@@ -20,7 +20,7 @@ Item {
             horizontalCenter: parent.horizontalCenter
         }
         color: "#fbf1c7"
-        text: "Scribble Something!"
+        text: "Let's have some fun."
     }
 
     Rectangle {
@@ -38,7 +38,7 @@ Item {
         property int finishY: -1
 
         function clearCanvas() {
-           const ctx = drawingCanvas.getContext("2d")
+            const ctx = drawingCanvas.getContext("2d")
             ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height)
             requestPaint()
         }
@@ -115,6 +115,10 @@ Item {
             bottom: parent.bottom
             rightMargin: 80
             bottomMargin: 40
+        }
+        onButtonClicked: {
+            drawingCanvas.save("temp.png")
+        mainLoader.source = "qrc:/ui/WaitingForPlayersScreen.qml"
         }
     }
 }

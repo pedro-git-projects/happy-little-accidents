@@ -8,5 +8,6 @@
         <file>ui/JoinLobbyScreen.qml</file>
         <file>ui/assets/check.png</file>
         <file>ui/DrawingScreen.qml</file>
+        <file>ui/WaitingForPlayersScreen.qml</file>
     </qresource>
 </RCC>

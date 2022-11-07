@@ -15,7 +15,7 @@ void MessageProcessHandler::processMessage(QString message) {
      * type:lobbyMessage;payLoad:message:message;sender:1234;senderID:4444
      * type:readyListChanged;payLoad:;
      * type:gameReadyToBegin;payLoad:0
-     *
+     * type:drawingPrompt;payLoad:drawingData;prompt:dog
     */
 
     QStringList separated{ message.split(QRegularExpression(";")) };
@@ -81,6 +81,9 @@ void MessageProcessHandler::processMessage(QString message) {
     }
     else if(separated.first() == "type:gameReadyToBegin") {
         emit gameStarting();
+    }
+    else if(separated.first() == "drawingPrompt") {
+        qDebug() << ":: Client: recieved drawing prompt";
     }
 
 }

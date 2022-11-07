@@ -12,6 +12,7 @@ void MessageProcessorHandler::processMessage(QString message) {
     type:joinGame;payLoad:4000;sender:5555
     type:message;payLoad:Message;lobbyID:4590;sender5555
     type:readyToPlay;payLoad:1;sender:5555
+    type:drawingData;payLoad:fileData;sender:clientID
     */
 
     QStringList separated{ message.split( QRegularExpression(";")) };
@@ -85,6 +86,27 @@ void MessageProcessorHandler::processMessage(QString message) {
             clientID = clientID.remove("sender:");
             emit clientReadyToPlay(clientID);
         }
+    }
+    else if(separated.front() == "type:drawingData") {
+        QString fileData{};
+        QString clientID{};
+
+        separated.pop_front();
+        if(separated.front().contains("payLoad:")) {
+           fileData = separated.front();
+           fileData = fileData.remove("payLoad:");
+        }
+        separated.pop_front();
+
+        if(separated.front().contains("sender:")) {
+           clientID = separated.front();
+           clientID = clientID.remove("sender:");
+        }
+
+        if(fileData != QString{} && clientID != QString{}) {
+            emit newDrawingData(fileData, clientID);
+        }
+
     }
 }
 
