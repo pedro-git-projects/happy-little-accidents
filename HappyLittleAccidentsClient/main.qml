@@ -17,7 +17,8 @@ Window {
     Loader {
        id: mainLoader
        anchors.fill: parent
-       source: "qrc:ui/MainMenuScreen.qml"
+       //source: "qrc:ui/MainMenuScreen.qml"
+       source: "qrc:ui/DrawingScreen.qml"
        Component.onCompleted:  console.log("Loader", mainLoader.status)
     }
 
