@@ -21,6 +21,7 @@ public:
     Q_INVOKABLE void readyToPlay();
     Q_INVOKABLE void drawingFinished();
     Q_INVOKABLE QString getDrawingPrompt();
+    Q_INVOKABLE QString drawingFilePath();
 
 public slots:
     void setLobbyRoomCode(QString lobbyCode);
@@ -41,7 +42,7 @@ signals:
     void readyListChanged();
     void gameStarting();
     void drawingPromptChanged();
-    void drawInstructionTime();
+    void drawPromptTime();
 
 private:
     QString clientID;

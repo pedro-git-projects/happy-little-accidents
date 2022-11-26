@@ -1,12 +1,14 @@
 import QtQuick 2.15
 
 Item {
-    id: drawingScreen
-
     Rectangle {
         id: background
         anchors.fill: parent
         color: "#282828"
+    }
+
+    Component.onCompleted: {
+       drawingCanvas.loadImage(gameManager.drawingFilePath())
     }
 
     Text {
@@ -20,7 +22,7 @@ Item {
             horizontalCenter: parent.horizontalCenter
         }
         color: "#fbf1c7"
-        text: "Let's have some fun."
+        text: "Draw:" + gameManager.drawingPrompt + "!"
     }
 
     Rectangle {
@@ -44,9 +46,9 @@ Item {
         }
 
         onPaint: {
-            const ctx = drawingCanvas.getContext("2d")
+            let ctx = drawingCanvas.getContext("2d")
             ctx.beginPath()
-            ctx.strokeStyle = "#1d2021"
+            ctx.strokeStyle = "#cc241d"
             ctx.lineWidth = 5
             ctx.lineJoin = "round"
             ctx.moveTo(startX, startY)
@@ -55,6 +57,12 @@ Item {
             ctx.stroke()
             startX = finishX
             startY = finishY
+        }
+
+        onImageLoaded: {
+            let ctx = drawingCanvas.getContext("2d")
+            ctx.drawImage(gameManager.drawingFilePath(), 0, 0)
+            drawingCanvas.requestPaint()
         }
 
         anchors {
@@ -118,7 +126,10 @@ Item {
         }
         onButtonClicked: {
             drawingCanvas.save("temp.png")
-        mainLoader.source = "qrc:/ui/WaitingForPlayersScreen.qml"
+            mainLoader.source = "qrc:/ui/WaitingForPlayersScreen.qml"
         }
     }
 }
+
+
+

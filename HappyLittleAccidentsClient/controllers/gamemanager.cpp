@@ -1,6 +1,7 @@
 #include "gamemanager.h"
 #include <QDebug>
 #include <QFile>
+#include <QDir>
 
 GameManager::GameManager(QObject *parent) :
     QObject{ parent },
@@ -76,6 +77,12 @@ QString GameManager::getDrawingPrompt() {
     return drawingPrompt;
 }
 
+QString GameManager::drawingFilePath() {
+    QString localPath{QDir::currentPath()};
+    QString ret{"file:///"+ localPath + QDir::separator() + clientID  + ".png"};
+    return ret;
+}
+
 void GameManager::setClientsInLobby(QStringList clients) {
    if(clientsInLobby != clients) {
        clientsInLobby = clients;
@@ -104,7 +111,7 @@ void GameManager::drawingAndPromptReady(QString data, QString prompt) {
     tempImage.flush();
     tempImage.close();
 
-    emit drawInstructionTime();
+    emit drawPromptTime();
 }
 
 void GameManager::setDrawingPrompt(QString prompt) {

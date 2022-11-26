@@ -12,6 +12,7 @@ Window {
        target: gameManager
        onInGameLobby: mainLoader.source = "qrc:/ui/LobbyScreen.qml"
        onGameStarting: mainLoader.source = "qrc:/ui/DrawingScreen.qml"
+       onDrawPromptTime: mainLoader.source = "qrc:/ui/DrawingPromptScreen.qml"
     }
 
     Loader {
