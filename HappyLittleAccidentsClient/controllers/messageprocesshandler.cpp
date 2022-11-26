@@ -82,8 +82,25 @@ void MessageProcessHandler::processMessage(QString message) {
     else if(separated.first() == "type:gameReadyToBegin") {
         emit gameStarting();
     }
-    else if(separated.first() == "drawingPrompt") {
+    else if(separated.first() == "type:drawingPrompt") {
         qDebug() << ":: Client: recieved drawing prompt";
-    }
+        QString payLoad{};
+        QString drawingPrompt{};
 
+        separated.pop_front();
+        if(separated.front().contains("payLoad:")) {
+            payLoad = separated.front();
+            payLoad = payLoad.remove("payLoad:");
+        }
+
+        separated.pop_front();
+        if(separated.front().contains("prompt:")) {
+            drawingPrompt = separated.front();
+            drawingPrompt = drawingPrompt.remove("prompt:");
+        }
+
+        if(!payLoad.isEmpty() && !drawingPrompt.isEmpty()) {
+           emit drawingAndPromptReady(payLoad, drawingPrompt);
+        }
+    }
 }

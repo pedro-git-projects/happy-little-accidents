@@ -16,6 +16,7 @@ signals:
     void newLobbyMessage(QString message);
     void readyListChanged(QStringList readyList);
     void gameStarting();
+    void drawingAndPromptReady(QString payLoad, QString prompt);
 };
 
 #endif // MESSAGEPROCESSHANDLER_H
