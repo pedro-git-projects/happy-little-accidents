@@ -7,7 +7,8 @@ GameManager::GameManager(QObject *parent) :
     lobbyRoomCode{QString{}},
     clientID{QString{}},
     clientsInLobby{QStringList{}},
-    readyClientsList{QStringList{}}
+    readyClientsList{QStringList{}},
+    drawingPrompt{QString{}}
 {
 
     messageProcessHandler = new MessageProcessHandler{this};
@@ -18,6 +19,7 @@ GameManager::GameManager(QObject *parent) :
     connect(messageProcessHandler, &MessageProcessHandler::newLobbyMessage, this, &GameManager::newLobbyMessage);
     connect(messageProcessHandler, &MessageProcessHandler::readyListChanged, this, &GameManager::newClientReadyList);
     connect(messageProcessHandler, &MessageProcessHandler::gameStarting, this, &GameManager::gameStarting);
+    connect(messageProcessHandler, &MessageProcessHandler::drawingAndPromptReady, this, &GameManager::drawingAndPromptReady);
 }
 
 GameManager::~GameManager() {
@@ -68,7 +70,10 @@ void GameManager::drawingFinished() {
     // type:drawingData;payLoad:fileData;sender:clientID
     QString dataPacket{ "type:drawingData;payLoad:" + fileData.toHex() + ";sender:" + clientID };
     emit readyToSendNewMessage(dataPacket);
+}
 
+QString GameManager::getDrawingPrompt() {
+    return drawingPrompt;
 }
 
 void GameManager::setClientsInLobby(QStringList clients) {
@@ -82,6 +87,30 @@ void GameManager::newClientReadyList(QStringList readyClients) {
     if(readyClientsList != readyClients) {
         readyClientsList = readyClients;
         emit readyListChanged();
+    }
+}
+
+void GameManager::drawingAndPromptReady(QString data, QString prompt) {
+    setDrawingPrompt(prompt);
+    QFile tempImage{clientID + ".png"};
+
+    if(!tempImage.open(QIODevice::WriteOnly)) {
+        qDebug() << ":: Client: failed to open image";
+        return;
+    }
+
+    QByteArray fileContents{QByteArray::fromHex(data.toLocal8Bit())};
+    tempImage.write(fileContents);
+    tempImage.flush();
+    tempImage.close();
+
+    emit drawInstructionTime();
+}
+
+void GameManager::setDrawingPrompt(QString prompt) {
+    if(drawingPrompt != prompt) {
+       drawingPrompt = prompt;
+       emit drawingPromptChanged();
     }
 }
 

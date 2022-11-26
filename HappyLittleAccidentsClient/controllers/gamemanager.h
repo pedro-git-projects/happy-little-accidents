@@ -8,6 +8,7 @@ class GameManager : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString lobbyRoomCode READ getLobbyRoomCode WRITE setLobbyRoomCode NOTIFY lobbyRoomCodeChanged)
     Q_PROPERTY(QStringList clientsInLobby READ getClientsInLobby WRITE setClientsInLobby NOTIFY clientsInLobbyChanged)
+    Q_PROPERTY(QString drawingPrompt READ getDrawingPrompt WRITE setDrawingPrompt NOTIFY drawingPromptChanged)
 public:
     explicit GameManager(QObject *parent = nullptr);
     ~GameManager();
@@ -19,6 +20,7 @@ public:
     Q_INVOKABLE bool isClientReady(QString clientID);
     Q_INVOKABLE void readyToPlay();
     Q_INVOKABLE void drawingFinished();
+    Q_INVOKABLE QString getDrawingPrompt();
 
 public slots:
     void setLobbyRoomCode(QString lobbyCode);
@@ -27,6 +29,8 @@ public slots:
     void joinedLobby(QString lobbyID, QStringList clients);
     void setClientsInLobby(QStringList clientList);
     void newClientReadyList(QStringList readyClients);
+    void drawingAndPromptReady(QString data, QString prompt);
+    void setDrawingPrompt(QString prompt);
 
 signals:
     void lobbyRoomCodeChanged();
@@ -36,10 +40,13 @@ signals:
     void newLobbyMessage(QString message);
     void readyListChanged();
     void gameStarting();
+    void drawingPromptChanged();
+    void drawInstructionTime();
 
 private:
     QString clientID;
     QString lobbyRoomCode;
+    QString drawingPrompt;
     MessageProcessHandler* messageProcessHandler;
     QStringList clientsInLobby;
     QStringList readyClientsList;
