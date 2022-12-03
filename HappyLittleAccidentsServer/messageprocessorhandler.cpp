@@ -89,10 +89,13 @@ void MessageProcessorHandler::processMessage(QString message) {
         }
     }
     else if(separated.front() == "type:drawingData" || separated.front() == "type:secondDrawingData") {
+        /*CLIENT ID IS NULL*/
+        qDebug() << ":: Server: recieved data packet";
         QString fileData{};
         QString clientID{};
         QString type{separated.front()};
         type = type.remove("type:");
+        qDebug() << "TYPE::" << type << Qt::endl;
 
         separated.pop_front();
         if(separated.front().contains("payLoad:")) {
@@ -106,9 +109,13 @@ void MessageProcessorHandler::processMessage(QString message) {
            clientID = clientID.remove("sender:");
         }
 
+        qDebug() << "CLIENT ID::" << clientID << Qt::endl;
+        qDebug() << "FILE DATA::" << fileData;
+
         if(fileData != QString{} && clientID != QString{} && type == "drawingData") {
             emit newDrawingData(fileData, clientID);
         } else if(fileData != QString{} && clientID != QString{} && type == "secondDrawingData") {
+            qDebug() << ":: Server: recieved second drawing data packet";
             emit newSecondDrawingData(fileData, clientID);
         }
     }
