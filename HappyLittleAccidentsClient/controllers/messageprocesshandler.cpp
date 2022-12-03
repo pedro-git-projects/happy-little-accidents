@@ -110,9 +110,9 @@ void MessageProcessHandler::processMessage(QString message) {
         QString payLoad{};
         QString clients{};
 
-        if(separated.first().contains("payLoad;")) {
+        if(separated.first().contains("payLoad:")) {
             payLoad = separated.first();
-            payLoad = payLoad.remove("payLoad");
+            payLoad = payLoad.remove("payLoad:");
         }
 
         separated.pop_front();
@@ -122,7 +122,7 @@ void MessageProcessHandler::processMessage(QString message) {
         }
 
         if(payLoad != QString{} && clients != QString{}) {
-            emit gameDrawingsReady( payLoad.split(QRegularExpression(",")), clients.split(QRegularExpression(",")));
+            emit gameDrawingsReady(payLoad.split(QRegularExpression(",")), clients.split(QRegularExpression(",")));
         }
     }
 }
