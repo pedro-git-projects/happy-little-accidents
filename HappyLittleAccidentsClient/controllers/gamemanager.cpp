@@ -9,7 +9,8 @@ GameManager::GameManager(QObject *parent) :
     clientID{QString{}},
     clientsInLobby{QStringList{}},
     readyClientsList{QStringList{}},
-    drawingPrompt{QString{}}
+    drawingPrompt{QString{}},
+    isSecondDrawing{false}
 {
 
     messageProcessHandler = new MessageProcessHandler{this};
@@ -21,6 +22,7 @@ GameManager::GameManager(QObject *parent) :
     connect(messageProcessHandler, &MessageProcessHandler::readyListChanged, this, &GameManager::newClientReadyList);
     connect(messageProcessHandler, &MessageProcessHandler::gameStarting, this, &GameManager::gameStarting);
     connect(messageProcessHandler, &MessageProcessHandler::drawingAndPromptReady, this, &GameManager::drawingAndPromptReady);
+    connect(messageProcessHandler, &MessageProcessHandler::gameDrawingsReady, this, &GameManager::gameDrawingsReady);
 }
 
 GameManager::~GameManager() {
@@ -55,6 +57,7 @@ void GameManager::readyToPlay() {
 }
 
 void GameManager::drawingFinished() {
+    qDebug() << "CALLED DRAWING FINISHED";
     /*
        open the canvas png
        load the data into a qbyte array
@@ -68,8 +71,16 @@ void GameManager::drawingFinished() {
     QByteArray fileData{ imageFile.readAll() };
     imageFile.close();
 
-    // type:drawingData;payLoad:fileData;sender:clientID
-    QString dataPacket{ "type:drawingData;payLoad:" + fileData.toHex() + ";sender:" + clientID };
+    QString dataPacket{};
+
+    if(isSecondDrawing) {
+      // type:secondDrawingData;payLoad:fileData;sender:clientID
+      dataPacket = "type:secondDrawingData;payLoad" + fileData.toHex() + ";sender" + clientID;
+    } else {
+       // type:drawingData;payLoad:fileData;sender:clientID
+       dataPacket = "type:drawingData;payLoad:" + fileData.toHex() + ";sender:" + clientID;
+    }
+
     emit readyToSendNewMessage(dataPacket);
 }
 
@@ -99,6 +110,7 @@ void GameManager::newClientReadyList(QStringList readyClients) {
 
 void GameManager::drawingAndPromptReady(QString data, QString prompt) {
     setDrawingPrompt(prompt);
+    isSecondDrawing = true;
     QFile tempImage{clientID + ".png"};
 
     if(!tempImage.open(QIODevice::WriteOnly)) {
@@ -118,6 +130,23 @@ void GameManager::setDrawingPrompt(QString prompt) {
     if(drawingPrompt != prompt) {
        drawingPrompt = prompt;
        emit drawingPromptChanged();
+    }
+}
+
+void GameManager::gameDrawingsReady(QStringList images, QStringList clients) {
+    qDebug() << "CALLED  GAME DRAWINGS READY";
+    QDir workingDir{QDir::currentPath()};
+    workingDir.mkdir("temp");
+
+    QString filePath{QDir::currentPath() + QDir::separator() + "temp" + QDir::separator()};
+
+    for(int i = 0; i < clients.size(); i++) {
+        QFile tempImage{filePath + clients.at(i) + ".png"};
+        tempImage.open(QIODevice::WriteOnly);
+        QByteArray fileData{QByteArray::fromHex(images.at(i).toLocal8Bit())};
+        tempImage.write(fileData);
+        tempImage.flush();
+        tempImage.close();
     }
 }
 

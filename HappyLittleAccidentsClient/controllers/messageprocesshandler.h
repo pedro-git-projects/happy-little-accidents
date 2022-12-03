@@ -17,6 +17,7 @@ signals:
     void readyListChanged(QStringList readyList);
     void gameStarting();
     void drawingAndPromptReady(QString payLoad, QString prompt);
+    void gameDrawingsReady(QStringList images, QStringList clients);
 };
 
 #endif // MESSAGEPROCESSHANDLER_H

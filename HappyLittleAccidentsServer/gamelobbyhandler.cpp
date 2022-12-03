@@ -6,6 +6,7 @@
 GameLobbyHandler::GameLobbyHandler(QString lobbyID, QObject *parent) : lobbyID{lobbyID} , QObject{parent} {
     clientReadyList.clear();
     clientDrawingData.clear();
+    clientSecondDrawingData.clear();
 
     prompts = QStringList() << "dog" << "cat" << "elephant" << "car" << "tree";
 }
@@ -74,12 +75,21 @@ void GameLobbyHandler::newDrawingData(QString fileData, QString clientID) {
                 if(i == this->gameClientList.size() - 1) {
                     drawing = this->clientDrawingData[this->gameClientList.at(0)];
                 } else {
-                   drawing = this->clientDrawingData[this->gameClientList.at(i + 1)];
+                    drawing = this->clientDrawingData[this->gameClientList.at(i + 1)];
                 }
                 sharedDrawings[currentClient] = drawing;
             }
             choosePrompt();
             emit allDrawingsRecieved(sharedDrawings);
+        }
+    }
+}
+
+void GameLobbyHandler::newSecondDrawingData(QString fileData, QString clientID) {
+    if(this->gameClientList.contains(clientID)) {
+        clientSecondDrawingData[clientID] = fileData;
+        if(clientSecondDrawingData.keys().size() == gameClientList.size()) {
+            emit allSecondDrawingsRecieved(clientDrawingData);
         }
     }
 }

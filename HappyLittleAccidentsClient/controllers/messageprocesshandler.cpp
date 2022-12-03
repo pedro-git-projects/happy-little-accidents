@@ -16,6 +16,7 @@ void MessageProcessHandler::processMessage(QString message) {
      * type:readyListChanged;payLoad:;
      * type:gameReadyToBegin;payLoad:0
      * type:drawingPrompt;payLoad:drawingData;prompt:dog
+     * type:gameImages;payLoad:fileData1,fileData2,fileData3;clients:1111,2222,3333
     */
 
     QStringList separated{ message.split(QRegularExpression(";")) };
@@ -101,6 +102,27 @@ void MessageProcessHandler::processMessage(QString message) {
 
         if(!payLoad.isEmpty() && !drawingPrompt.isEmpty()) {
            emit drawingAndPromptReady(payLoad, drawingPrompt);
+        }
+    }
+   //type:gameImages;payLoad:fileData1,fileData2,fileData3;clients:1111,2222,3333
+    else if(separated.first() == "type:gameImages") {
+        separated.pop_front();
+        QString payLoad{};
+        QString clients{};
+
+        if(separated.first().contains("payLoad;")) {
+            payLoad = separated.first();
+            payLoad = payLoad.remove("payLoad");
+        }
+
+        separated.pop_front();
+        if(separated.first().contains("clients:")) {
+            clients = separated.first();
+            clients.remove("clients:");
+        }
+
+        if(payLoad != QString{} && clients != QString{}) {
+            emit gameDrawingsReady( payLoad.split(QRegularExpression(",")), clients.split(QRegularExpression(",")));
         }
     }
 }
