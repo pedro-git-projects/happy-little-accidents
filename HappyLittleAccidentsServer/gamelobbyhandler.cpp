@@ -71,13 +71,11 @@ void GameLobbyHandler::newDrawingData(QString fileData, QString clientID) {
             for(int i = 0; i < gameClientList.size(); i++) {
                 QString currentClient = gameClientList.at(i);
                 QString drawing{};
-
-                if(i == gameClientList.size() - 1) {
-                    drawing = clientDrawingData[gameClientList.at(0)];
+                if(i == this->gameClientList.size() - 1) {
+                    drawing = this->clientDrawingData[this->gameClientList.at(0)];
                 } else {
-                    drawing = clientDrawingData[gameClientList.at(i + 1)];
+                   drawing = this->clientDrawingData[this->gameClientList.at(i + 1)];
                 }
-
                 sharedDrawings[currentClient] = drawing;
             }
             choosePrompt();

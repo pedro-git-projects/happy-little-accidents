@@ -115,6 +115,7 @@ void GameManager::newClientReadyList(QStringList readyClients) {
 void GameManager::drawingAndPromptReady(QString data, QString prompt) {
     setDrawingPrompt(prompt);
     isSecondDrawing = true;
+
     QFile tempImage{clientID + ".png"};
 
     if(!tempImage.open(QIODevice::WriteOnly)) {
@@ -137,6 +138,7 @@ void GameManager::setDrawingPrompt(QString prompt) {
     }
 }
 
+
 void GameManager::gameDrawingsReady(QStringList images, QStringList clients) {
     QDir workingDir{QDir::currentPath()};
     workingDir.mkdir("temp");
@@ -152,6 +154,7 @@ void GameManager::gameDrawingsReady(QStringList images, QStringList clients) {
         tempImage.close();
     }
 }
+
 
 void GameManager::setLobbyRoomCode(QString lobbyCode) {
     if(this->lobbyRoomCode != lobbyCode) {
