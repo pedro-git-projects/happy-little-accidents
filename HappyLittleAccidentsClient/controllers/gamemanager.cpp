@@ -78,7 +78,7 @@ void GameManager::drawingFinished() {
 
     if(isSecondDrawing) {
       // type:secondDrawingData;payLoad:fileData;sender:clientID
-      dataPacket = "type:secondDrawingData;payLoad:" + fileData.toHex() + ";sender" + clientID;
+      dataPacket = "type:secondDrawingData;payLoad:" + fileData.toHex() + ";sender:" + clientID;
     } else {
        // type:drawingData;payLoad:fileData;sender:clientID
        dataPacket = "type:drawingData;payLoad:" + fileData.toHex() + ";sender:" + clientID;
