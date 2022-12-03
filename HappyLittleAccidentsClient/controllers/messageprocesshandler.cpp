@@ -106,7 +106,6 @@ void MessageProcessHandler::processMessage(QString message) {
     }
    //type:gameImages;payLoad:fileData1,fileData2,fileData3;clients:1111,2222,3333
     else if(separated.first() == "type:gameImages") {
-        qDebug() << ":: Client: recieved game images";
         separated.pop_front();
         QString payLoad{};
         QString clients{};
@@ -120,7 +119,6 @@ void MessageProcessHandler::processMessage(QString message) {
         if(separated.first().contains("clients:")) {
             clients = separated.first();
             clients.remove("clients:");
-            qDebug() << "typeImages CALLED";
         }
 
         if(payLoad != QString{} && clients != QString{}) {

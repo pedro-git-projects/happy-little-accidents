@@ -138,7 +138,6 @@ void GameManager::setDrawingPrompt(QString prompt) {
 }
 
 void GameManager::gameDrawingsReady(QStringList images, QStringList clients) {
-    qDebug() << "CALLED  GAME DRAWINGS READY";
     QDir workingDir{QDir::currentPath()};
     workingDir.mkdir("temp");
 
