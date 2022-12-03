@@ -17,6 +17,7 @@ signals:
     void messageLobbyRequest(QString message, QString LobbyID, QString sender);
     void clientReadyToPlay(QString uuid);
     void newDrawingData(QString fileData, QString clientID);
+    void newSecondDrawingData(QString fileData, QString clientID);
 
 };
 

@@ -21,7 +21,9 @@ public slots:
     void userReadyToPlay(QString uuid);
     void gameReadyToBegin();
     void newDrawingDataReady(QString fileData, QString clientID);
+    void newSecondDrawingDataReady(QString fileData, QString clientID);
     void allDrawingsInGameLobbyRecieved(QMap<QString, QString> sharedMap);
+    void allSecondDrawingsInGameLobbyRecieved(QMap<QString, QString> drawingMap);
 
 signals:
 

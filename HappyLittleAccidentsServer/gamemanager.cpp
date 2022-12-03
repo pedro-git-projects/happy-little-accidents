@@ -11,6 +11,7 @@ GameManager::GameManager(QObject *parent) : QObject{parent} {
     connect(messageProcessHandler, &MessageProcessorHandler::messageLobbyRequest, this, &GameManager::messageLobbyRequest);
     connect(messageProcessHandler, &MessageProcessorHandler::clientReadyToPlay, this, &GameManager::userReadyToPlay);
     connect(messageProcessHandler, &MessageProcessorHandler::newDrawingData , this, &GameManager::newDrawingDataReady);
+    connect(messageProcessHandler, &MessageProcessorHandler::newSecondDrawingData , this, &GameManager::newSecondDrawingDataReady);
 }
 
 
@@ -25,6 +26,7 @@ void GameManager::createGameLobbyRequest(QString uuid) {
     connect(newGameLobby, &GameLobbyHandler::userReadyListChanged, this, &GameManager::userReadyListChanged);
     connect(newGameLobby, &GameLobbyHandler::gameReadyToBegin, this, &GameManager::gameReadyToBegin);
     connect(newGameLobby, &GameLobbyHandler::allDrawingsRecieved, this, &GameManager::allDrawingsInGameLobbyRecieved);
+    connect(newGameLobby, &GameLobbyHandler::allSecondDrawingsRecieved, this, &GameManager::allSecondDrawingsInGameLobbyRecieved);
 
     newGameLobby->addClient(uuid);
     gameLobbyMap[newLobbyID] = newGameLobby;
@@ -79,6 +81,13 @@ void GameManager::newDrawingDataReady(QString fileData, QString clientID) {
     }
 }
 
+void GameManager::newSecondDrawingDataReady(QString fileData, QString clientID) {
+    QList<GameLobbyHandler*> gameLobbyList = gameLobbyMap.values();
+    foreach(GameLobbyHandler* existingLobby, gameLobbyList) {
+       existingLobby->newSecondDrawingData(fileData, clientID);
+    }
+}
+
 void GameManager::allDrawingsInGameLobbyRecieved(QMap<QString, QString> sharedMap) {
     GameLobbyHandler* existingLobby{qobject_cast<GameLobbyHandler*>(sender())};
     //type:drawingPrompt;payLoad:drawingData;prompt:dog
@@ -86,4 +95,25 @@ void GameManager::allDrawingsInGameLobbyRecieved(QMap<QString, QString> sharedMa
         QString dataPacket{"type:drawingPrompt;payLoad:" + sharedMap[client] + ";prompt:" + existingLobby->prompt()};
         socketHandler->sendTextMessageToClient(dataPacket, client);
     }
+}
+
+void GameManager::allSecondDrawingsInGameLobbyRecieved(QMap<QString, QString> drawingMap) {
+    GameLobbyHandler* existingLobby{qobject_cast<GameLobbyHandler*>(sender())};
+    //type:gameImages;payLoad:fileData1,fileData2,fileData3;clients:1111,2222,3333
+    QString ret{"type:gameImages;payLoad:"};
+    QString payLoad{};
+    QString clients{};
+    for (
+         QMap<QString, QString>::iterator mapIterator = drawingMap.begin();
+         mapIterator != drawingMap.end();
+         mapIterator++
+        ) {
+        clients.append(mapIterator.key() + ",");
+        payLoad.append(mapIterator.value() + ",");
+    }
+    clients.chop(1);
+    payLoad.chop(1);
+
+    ret.append(payLoad + ";clients:" + clients);
+    socketHandler->sendTextMessageToMultipleClients(ret, existingLobby->clientsInLobbyList());
 }

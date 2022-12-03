@@ -32,6 +32,7 @@ public slots:
     void newClientReadyList(QStringList readyClients);
     void drawingAndPromptReady(QString data, QString prompt);
     void setDrawingPrompt(QString prompt);
+    void gameDrawingsReady(QStringList images, QStringList clients);
 
 signals:
     void lobbyRoomCodeChanged();
@@ -51,6 +52,7 @@ private:
     MessageProcessHandler* messageProcessHandler;
     QStringList clientsInLobby;
     QStringList readyClientsList;
+    bool isSecondDrawing;
 
 };
 

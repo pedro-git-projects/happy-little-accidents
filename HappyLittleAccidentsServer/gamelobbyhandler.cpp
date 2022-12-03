@@ -6,6 +6,7 @@
 GameLobbyHandler::GameLobbyHandler(QString lobbyID, QObject *parent) : lobbyID{lobbyID} , QObject{parent} {
     clientReadyList.clear();
     clientDrawingData.clear();
+    clientSecondDrawingData.clear();
 
     prompts = QStringList() << "dog" << "cat" << "elephant" << "car" << "tree";
 }
@@ -35,12 +36,12 @@ QStringList GameLobbyHandler::clientsInLobbyList() {
 }
 
 void GameLobbyHandler::userReadyToPlay(QString clientID) {
-    if(this->gameClientList.contains(clientID)) {
-        this->clientReadyList[clientID] = true;
+    if(gameClientList.contains(clientID)) {
+       clientReadyList[clientID] = true;
         emit userReadyListChanged();
         bool notReady{false};
-        foreach(const QString& clientID, this->clientReadyList.keys()) {
-            if(!this->clientReadyList[clientID]) {
+        foreach(const QString& clientID, clientReadyList.keys()) {
+            if(!clientReadyList[clientID]) {
                 notReady = true;
             }
         }
@@ -53,7 +54,7 @@ void GameLobbyHandler::userReadyToPlay(QString clientID) {
 
 QString GameLobbyHandler::whoIsReady() {
     QString returnValue{};
-    foreach(const QString& clientID, this->clientReadyList.keys()) {
+    foreach(const QString& clientID, clientReadyList.keys()) {
         if(clientReadyList[clientID]) {
             returnValue.append(clientID + ",");
         }
@@ -63,14 +64,13 @@ QString GameLobbyHandler::whoIsReady() {
 }
 
 void GameLobbyHandler::newDrawingData(QString fileData, QString clientID) {
-    if(this->gameClientList.contains(clientID)) {
-        this->clientDrawingData[clientID] = fileData;
-        if(this->clientDrawingData.keys().size() == this->gameClientList.size()) {
+    if(gameClientList.contains(clientID)) {
+        clientDrawingData[clientID] = fileData;
+        if(clientDrawingData.keys().size() == gameClientList.size()) {
             QMap<QString, QString> sharedDrawings;
-            for(int i = 0; i < this->gameClientList.size(); i++) {
-                QString currentClient{this->gameClientList.at(i)};
+            for(int i = 0; i < gameClientList.size(); i++) {
+                QString currentClient = gameClientList.at(i);
                 QString drawing{};
-
                 if(i == this->gameClientList.size() - 1) {
                     drawing = this->clientDrawingData[this->gameClientList.at(0)];
                 } else {
@@ -80,6 +80,15 @@ void GameLobbyHandler::newDrawingData(QString fileData, QString clientID) {
             }
             choosePrompt();
             emit allDrawingsRecieved(sharedDrawings);
+        }
+    }
+}
+
+void GameLobbyHandler::newSecondDrawingData(QString fileData, QString clientID) {
+    if(gameClientList.contains(clientID)) {
+        clientSecondDrawingData[clientID] = fileData;
+        if(clientSecondDrawingData.keys().size() == gameClientList.size()) {
+            emit allSecondDrawingsRecieved(clientDrawingData);
         }
     }
 }
