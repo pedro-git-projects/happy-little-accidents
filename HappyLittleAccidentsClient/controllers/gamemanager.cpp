@@ -66,7 +66,10 @@ void GameManager::drawingFinished() {
     */
 
     QFile imageFile{ "temp.png" };
-    if(!imageFile.open(QIODevice::ReadOnly)) return;
+    if(!imageFile.open(QIODevice::ReadOnly)) {
+        qDebug() << "failed to open image on GameManager::drawingFinished";
+        return;
+      }
 
     QByteArray fileData{ imageFile.readAll() };
     imageFile.close();
@@ -75,12 +78,13 @@ void GameManager::drawingFinished() {
 
     if(isSecondDrawing) {
       // type:secondDrawingData;payLoad:fileData;sender:clientID
-      dataPacket = "type:secondDrawingData;payLoad" + fileData.toHex() + ";sender" + clientID;
+      dataPacket = "type:secondDrawingData;payLoad:" + fileData.toHex() + ";sender" + clientID;
     } else {
        // type:drawingData;payLoad:fileData;sender:clientID
        dataPacket = "type:drawingData;payLoad:" + fileData.toHex() + ";sender:" + clientID;
     }
 
+    qDebug() << "EMITTED DATA PACKET::" << dataPacket;
     emit readyToSendNewMessage(dataPacket);
 }
 

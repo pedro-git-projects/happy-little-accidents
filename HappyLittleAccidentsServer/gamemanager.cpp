@@ -115,5 +115,6 @@ void GameManager::allSecondDrawingsInGameLobbyRecieved(QMap<QString, QString> dr
     payLoad.chop(1);
 
     ret.append(payLoad + ";clients:" + clients);
+    qDebug() << "ALL SECOND DRAWINGS IN GAME LOBBY RECIEVED " << ret;
     socketHandler->sendTextMessageToMultipleClients(ret, existingLobby->clientsInLobbyList());
 }
