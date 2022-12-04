@@ -14,6 +14,7 @@ void MessageProcessorHandler::processMessage(QString message) {
     type:readyToPlay;payLoad:1;sender:5555
     type:drawingData;payLoad:fileData;sender:clientID
     type:secondDrawingData;payLoad:fileData;sender:clientID
+    type:castVote;payLoad:clientID;sender
     */
 
     QStringList separated{ message.split( QRegularExpression(";")) };
@@ -89,7 +90,6 @@ void MessageProcessorHandler::processMessage(QString message) {
         }
     }
     else if(separated.front() == "type:drawingData" || separated.front() == "type:secondDrawingData") {
-        /*CLIENT ID IS NULL*/
         QString fileData{};
         QString clientID{};
         QString type{separated.front()};
@@ -97,14 +97,14 @@ void MessageProcessorHandler::processMessage(QString message) {
 
         separated.pop_front();
         if(separated.front().contains("payLoad:")) {
-           fileData = separated.front();
-           fileData = fileData.remove("payLoad:");
+            fileData = separated.front();
+            fileData = fileData.remove("payLoad:");
         }
         separated.pop_front();
 
         if(separated.front().contains("sender:")) {
-           clientID = separated.front();
-           clientID = clientID.remove("sender:");
+            clientID = separated.front();
+            clientID = clientID.remove("sender:");
         }
 
         if(fileData != QString{} && clientID != QString{} && type == "drawingData") {
@@ -113,6 +113,28 @@ void MessageProcessorHandler::processMessage(QString message) {
             qDebug() << ":: Server: recieved second drawing data packet";
             emit newSecondDrawingData(fileData, clientID);
         }
+    }
+    else if(separated.front() == "type:castVote") {
+        QString vote{};
+        QString senderID{};
+
+        separated.pop_front();
+        if (separated.front().contains("payLoad:"))
+        {
+            vote = separated.front();
+            vote = vote.remove("payLoad:");
+        }
+
+        separated.pop_front();
+
+        if(separated.front().contains("sender:"))
+        {
+            senderID = separated.front();
+            senderID = senderID.remove( "sender:");
+        }
+
+        if ( vote != QString{} && senderID != QString{} )
+            emit newVote(vote, senderID);
     }
 }
 

@@ -37,7 +37,7 @@ QStringList GameLobbyHandler::clientsInLobbyList() {
 
 void GameLobbyHandler::userReadyToPlay(QString clientID) {
     if(gameClientList.contains(clientID)) {
-       clientReadyList[clientID] = true;
+        clientReadyList[clientID] = true;
         emit userReadyListChanged();
         bool notReady{false};
         foreach(const QString& clientID, clientReadyList.keys()) {
@@ -74,7 +74,7 @@ void GameLobbyHandler::newDrawingData(QString fileData, QString clientID) {
                 if(i == this->gameClientList.size() - 1) {
                     drawing = this->clientDrawingData[this->gameClientList.at(0)];
                 } else {
-                   drawing = this->clientDrawingData[this->gameClientList.at(i + 1)];
+                    drawing = this->clientDrawingData[this->gameClientList.at(i + 1)];
                 }
                 sharedDrawings[currentClient] = drawing;
             }
@@ -103,6 +103,31 @@ void GameLobbyHandler::choosePrompt() {
 
 QString GameLobbyHandler::prompt() {
     return selectedPrompt;
+}
+
+void GameLobbyHandler::newVote(QString vote, QString clientID) {
+    if(gameClientList.contains(clientID) && !clientsWhoVoted.contains(clientID)) {
+        if(voteResults.contains(vote)){
+            voteResults[vote]++;
+        } else {
+            voteResults[vote] = 1;
+        }
+
+        clientsWhoVoted.append(clientID);
+
+        if(clientsWhoVoted.size() == gameClientList.size()) {
+            QString winner{};
+            int highestVote = 0;
+            QList<QString> clients = voteResults.keys();
+            foreach(const QString& client, clients) {
+                if(voteResults[ client ] > highestVote) {
+                    winner = client;
+                    highestVote = voteResults[client];
+                }
+            }
+            emit winnerChosen(winner);
+        }
+    }
 }
 
 

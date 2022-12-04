@@ -10,6 +10,8 @@ class GameManager : public QObject {
     Q_PROPERTY(QStringList clientsInLobby READ getClientsInLobby WRITE setClientsInLobby NOTIFY clientsInLobbyChanged)
     Q_PROPERTY(QString drawingPrompt READ getDrawingPrompt WRITE setDrawingPrompt NOTIFY drawingPromptChanged)
     Q_PROPERTY(QStringList drawingList READ getDrawingList WRITE setDrawingList NOTIFY drawingListChanged);
+    Q_PROPERTY(QString winner READ getWinner WRITE setWinner NOTIFY winnerChanged);
+
 public:
     explicit GameManager(QObject *parent = nullptr);
     ~GameManager();
@@ -25,6 +27,8 @@ public:
     Q_INVOKABLE QString drawingFilePath();
     Q_INVOKABLE QStringList getDrawingList();
     Q_INVOKABLE void castVote(QString imagURL);
+    Q_INVOKABLE QString getWinner();
+    Q_INVOKABLE QString winnerImage();
 
 public slots:
     void setLobbyRoomCode(QString lobbyCode);
@@ -37,6 +41,8 @@ public slots:
     void setDrawingPrompt(QString prompt);
     void gameDrawingsReady(QStringList images, QStringList clients);
     void setDrawingList(QStringList newList);
+    void winnerChosen( QString winner);
+    void setWinner(QString winner );
 
 signals:
     void lobbyRoomCodeChanged();
@@ -50,6 +56,8 @@ signals:
     void drawPromptTime();
     void drawingListChanged();
     void votingTime();
+    void winnerChanged();
+    void gameOver();
 
 private:
     QString clientID;
@@ -60,6 +68,8 @@ private:
     QStringList readyClientsList;
     bool isSecondDrawing;
     QStringList drawingList;
+    QString winner;
+    bool voteFinished;
 
 };
 

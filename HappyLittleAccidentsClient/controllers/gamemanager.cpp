@@ -11,7 +11,9 @@ GameManager::GameManager(QObject *parent) :
     readyClientsList{QStringList{}},
     drawingPrompt{QString{}},
     isSecondDrawing{false},
-    drawingList{QStringList{}}
+    drawingList{QStringList{}},
+    winner{QString{}},
+    voteFinished{false}
 {
 
     messageProcessHandler = new MessageProcessHandler{this};
@@ -24,6 +26,7 @@ GameManager::GameManager(QObject *parent) :
     connect(messageProcessHandler, &MessageProcessHandler::gameStarting, this, &GameManager::gameStarting);
     connect(messageProcessHandler, &MessageProcessHandler::drawingAndPromptReady, this, &GameManager::drawingAndPromptReady);
     connect(messageProcessHandler, &MessageProcessHandler::gameDrawingsReady, this, &GameManager::gameDrawingsReady);
+    connect(messageProcessHandler, &MessageProcessHandler::winnerChosen, this, &GameManager::winnerChosen);
 }
 
 GameManager::~GameManager() {
@@ -36,6 +39,19 @@ QString GameManager::getLobbyRoomCode() {
 
 QStringList GameManager::getClientsInLobby() {
     return clientsInLobby;
+}
+
+QString GameManager::getWinner() {
+    return winner;
+}
+
+QString GameManager::winnerImage() {
+    QDir workingDir{QDir::currentPath()};
+    workingDir.mkdir("temp");
+
+    QString filePath = QDir::currentPath() + QDir::separator() + "temp" + QDir::separator() + winner + ".png";
+    filePath.prepend("file:///");
+    return filePath;
 }
 
 void GameManager::joinLobbyRequest(QString lobbyID) {
@@ -58,13 +74,14 @@ void GameManager::readyToPlay() {
 }
 
 void GameManager::drawingFinished() {
-    qDebug() << "CALLED DRAWING FINISHED";
     /*
        open the canvas png
        load the data into a qbyte array
        create a packet
        send packet to server
     */
+
+    if(voteFinished) return;
 
     QFile imageFile{ "temp.png" };
     if(!imageFile.open(QIODevice::ReadOnly)) {
@@ -97,7 +114,11 @@ QStringList GameManager::getDrawingList() {
     return drawingList;
 }
 
-void GameManager::castVote(QString imagURL) {
+void GameManager::castVote(QString imageURL) {
+    voteFinished = true;
+    QFileInfo fileInfo{imageURL};
+    // type:castVote;payLoad:clientID;sender
+    emit readyToSendNewMessage("type:castVote;payLoad:" + fileInfo.baseName() + ";sender:" + clientID);
 
 }
 
@@ -154,6 +175,13 @@ void GameManager::setDrawingPrompt(QString prompt) {
     }
 }
 
+// attention
+void GameManager::setWinner(QString winner) {
+    if(this->winner!= winner) {
+        this->winner = winner;
+        emit winnerChanged();
+    }
+}
 
 void GameManager::gameDrawingsReady(QStringList images, QStringList clients) {
     QDir workingDir{QDir::currentPath()};
@@ -177,7 +205,6 @@ void GameManager::gameDrawingsReady(QStringList images, QStringList clients) {
     setDrawingList(newFiles);
     emit votingTime();
 }
-
 
 void GameManager::setLobbyRoomCode(QString lobbyCode) {
     if(this->lobbyRoomCode != lobbyCode) {
@@ -205,3 +232,9 @@ void GameManager::createGameRequest() {
    // "type:createGame;payLoad:0;sender:" + clientID
     emit readyToSendNewMessage("type:createGame;payLoad:0;sender:" + clientID);
 }
+
+void GameManager::winnerChosen(QString winner) {
+    setWinner(winner);
+    emit gameOver();
+}
+

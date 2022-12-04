@@ -17,12 +17,14 @@ public:
     void newSecondDrawingData(QString fileData, QString clientID);
     void choosePrompt();
     QString prompt();
+    void newVote(QString vote, QString clientID);
 
 signals:
     void userReadyListChanged();
     void gameReadyToBegin();
     void allDrawingsRecieved(QMap<QString, QString> newMap);
     void allSecondDrawingsRecieved(QMap<QString, QString> newMap);
+    void winnerChosen(QString winner);
 
 private:
     QStringList prompts;
@@ -32,7 +34,8 @@ private:
     QMap<QString, bool> clientReadyList;
     QMap<QString, QString> clientDrawingData;
     QMap<QString, QString> clientSecondDrawingData;
-
+    QList<QString> clientsWhoVoted;
+    QMap<QString, int> voteResults;
 };
 
 #endif // GAMELOBBYHANDLER_H

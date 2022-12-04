@@ -12,6 +12,7 @@ GameManager::GameManager(QObject *parent) : QObject{parent} {
     connect(messageProcessHandler, &MessageProcessorHandler::clientReadyToPlay, this, &GameManager::userReadyToPlay);
     connect(messageProcessHandler, &MessageProcessorHandler::newDrawingData , this, &GameManager::newDrawingDataReady);
     connect(messageProcessHandler, &MessageProcessorHandler::newSecondDrawingData , this, &GameManager::newSecondDrawingDataReady);
+    connect(messageProcessHandler, &MessageProcessorHandler::newVote, this, &GameManager::newVote);
 }
 
 
@@ -27,6 +28,7 @@ void GameManager::createGameLobbyRequest(QString uuid) {
     connect(newGameLobby, &GameLobbyHandler::gameReadyToBegin, this, &GameManager::gameReadyToBegin);
     connect(newGameLobby, &GameLobbyHandler::allDrawingsRecieved, this, &GameManager::allDrawingsInGameLobbyRecieved);
     connect(newGameLobby, &GameLobbyHandler::allSecondDrawingsRecieved, this, &GameManager::allSecondDrawingsInGameLobbyRecieved);
+    connect(newGameLobby, &GameLobbyHandler::winnerChosen, this, &GameManager::winnerChosen);
 
     newGameLobby->addClient(uuid);
     gameLobbyMap[newLobbyID] = newGameLobby;
@@ -116,4 +118,18 @@ void GameManager::allSecondDrawingsInGameLobbyRecieved(QMap<QString, QString> dr
 
     ret.append(payLoad + ";clients:" + clients);
     socketHandler->sendTextMessageToMultipleClients(ret, existingLobby->clientsInLobbyList());
+}
+
+void GameManager::newVote(QString vote, QString senderID) {
+    qDebug() << ":: Server: Recieved new vote";
+    QList<GameLobbyHandler*> gameLobbyList = gameLobbyMap.values();
+    foreach(GameLobbyHandler* existingLobby, gameLobbyList)
+        existingLobby->newVote(vote, senderID);
+
+}
+
+void GameManager::winnerChosen(QString winner) {
+    GameLobbyHandler* existingLobby = qobject_cast<GameLobbyHandler*>(sender());
+    //type:winnerChosen;payLoad:winner
+    socketHandler->sendTextMessageToMultipleClients("type:winnerChosen;payLoad:" + winner, existingLobby->clientsInLobbyList());
 }

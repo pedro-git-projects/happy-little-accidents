@@ -18,6 +18,7 @@ signals:
     void gameStarting();
     void drawingAndPromptReady(QString payLoad, QString prompt);
     void gameDrawingsReady(QStringList images, QStringList clients);
+    void winnerChosen(QString winner);
 };
 
 #endif // MESSAGEPROCESSHANDLER_H

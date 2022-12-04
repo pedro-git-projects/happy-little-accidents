@@ -23,5 +23,4 @@ Item {
         text: "Waiting for everyone<br> to finish..."
         horizontalAlignment: Text.AlignHCenter
     }
-
 }

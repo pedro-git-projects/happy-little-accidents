@@ -18,6 +18,7 @@ signals:
     void clientReadyToPlay(QString uuid);
     void newDrawingData(QString fileData, QString clientID);
     void newSecondDrawingData(QString fileData, QString clientID);
+    void newVote(QString vote, QString clientID);
 
 };
 

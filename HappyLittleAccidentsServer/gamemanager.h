@@ -24,6 +24,8 @@ public slots:
     void newSecondDrawingDataReady(QString fileData, QString clientID);
     void allDrawingsInGameLobbyRecieved(QMap<QString, QString> sharedMap);
     void allSecondDrawingsInGameLobbyRecieved(QMap<QString, QString> drawingMap);
+    void newVote(QString vote, QString senderID);
+    void winnerChosen(QString winner);
 
 signals:
 

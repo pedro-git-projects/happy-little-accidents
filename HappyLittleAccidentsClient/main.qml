@@ -14,6 +14,7 @@ Window {
        onGameStarting: mainLoader.source = "qrc:/ui/DrawingScreen.qml"
        onDrawPromptTime: mainLoader.source = "qrc:/ui/DrawingPromptScreen.qml"
        onVotingTime: mainLoader.source = "qrc:/ui/VoteScreen.qml";
+       onGameOver: mainLoader.source = "qrc:/ui/WinnerScreen.qml";
     }
 
     Loader {

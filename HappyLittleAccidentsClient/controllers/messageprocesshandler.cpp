@@ -17,6 +17,7 @@ void MessageProcessHandler::processMessage(QString message) {
      * type:gameReadyToBegin;payLoad:0
      * type:drawingPrompt;payLoad:drawingData;prompt:dog
      * type:gameImages;payLoad:fileData1,fileData2,fileData3;clients:1111,2222,3333
+     * type:winnerChosen;payLoad:winner
     */
 
     QStringList separated{ message.split(QRegularExpression(";")) };
@@ -65,7 +66,7 @@ void MessageProcessHandler::processMessage(QString message) {
             newMessage = separated.front();
             newMessage = newMessage.remove("payLoad:");
         }
-       separated.pop_front();
+        separated.pop_front();
         if(separated.front().contains("sender:")) {
             senderID = separated.front();
             senderID = senderID.remove("sender:");
@@ -74,11 +75,11 @@ void MessageProcessHandler::processMessage(QString message) {
         emit newLobbyMessage(displayMessage);
     }
     else if(separated.first() == "type:readyListChanged") {
-       separated.pop_front();
-       QString payLoad{ separated.front() };
-       payLoad = payLoad.remove("payLoad:");
-       QStringList readyClients = payLoad.split(QRegularExpression(","));
-       emit readyListChanged(readyClients);
+        separated.pop_front();
+        QString payLoad{ separated.front() };
+        payLoad = payLoad.remove("payLoad:");
+        QStringList readyClients = payLoad.split(QRegularExpression(","));
+        emit readyListChanged(readyClients);
     }
     else if(separated.first() == "type:gameReadyToBegin") {
         emit gameStarting();
@@ -101,10 +102,10 @@ void MessageProcessHandler::processMessage(QString message) {
         }
 
         if(!payLoad.isEmpty() && !drawingPrompt.isEmpty()) {
-           emit drawingAndPromptReady(payLoad, drawingPrompt);
+            emit drawingAndPromptReady(payLoad, drawingPrompt);
         }
     }
-   //type:gameImages;payLoad:fileData1,fileData2,fileData3;clients:1111,2222,3333
+    //type:gameImages;payLoad:fileData1,fileData2,fileData3;clients:1111,2222,3333
     else if(separated.first() == "type:gameImages") {
         separated.pop_front();
         QString payLoad{};
@@ -123,6 +124,20 @@ void MessageProcessHandler::processMessage(QString message) {
 
         if(payLoad != QString{} && clients != QString{}) {
             emit gameDrawingsReady(payLoad.split(QRegularExpression(",")), clients.split(QRegularExpression(",")));
+        }
+    }
+    else if (separated.front() == "type:winnerChosen") {
+        //type:winnerChosen;payLoad:winner
+        QString winner{};
+
+        separated.pop_front();
+        if ( separated.front().contains( "payLoad:")) {
+            winner = separated.front();
+        }
+
+        winner = winner.remove("payLoad:");
+        if(winner != QString()) {
+            emit winnerChosen( winner );
         }
     }
 }

@@ -81,6 +81,9 @@ Item {
             rightMargin: 80
             bottomMargin: 40
         }
-        onButtonClicked: gameManager.castVote(votingScreen.votedImage);
+        onButtonClicked: {
+            gameManager.castVote(votingScreen.votedImage)
+            mainLoader.source = "qrc:/ui/WaitingForPlayersScreen.qml"
+        }
     }
 }
