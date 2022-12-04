@@ -10,5 +10,6 @@
         <file>ui/DrawingScreen.qml</file>
         <file>ui/WaitingForPlayersScreen.qml</file>
         <file>ui/DrawingPromptScreen.qml</file>
+        <file>ui/VoteScreen.qml</file>
     </qresource>
 </RCC>

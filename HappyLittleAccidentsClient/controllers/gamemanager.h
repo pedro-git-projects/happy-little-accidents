@@ -9,6 +9,7 @@ class GameManager : public QObject {
     Q_PROPERTY(QString lobbyRoomCode READ getLobbyRoomCode WRITE setLobbyRoomCode NOTIFY lobbyRoomCodeChanged)
     Q_PROPERTY(QStringList clientsInLobby READ getClientsInLobby WRITE setClientsInLobby NOTIFY clientsInLobbyChanged)
     Q_PROPERTY(QString drawingPrompt READ getDrawingPrompt WRITE setDrawingPrompt NOTIFY drawingPromptChanged)
+    Q_PROPERTY(QStringList drawingList READ getDrawingList WRITE setDrawingList NOTIFY drawingListChanged);
 public:
     explicit GameManager(QObject *parent = nullptr);
     ~GameManager();
@@ -22,6 +23,8 @@ public:
     Q_INVOKABLE void drawingFinished();
     Q_INVOKABLE QString getDrawingPrompt();
     Q_INVOKABLE QString drawingFilePath();
+    Q_INVOKABLE QStringList getDrawingList();
+    Q_INVOKABLE void castVote(QString imagURL);
 
 public slots:
     void setLobbyRoomCode(QString lobbyCode);
@@ -33,6 +36,7 @@ public slots:
     void drawingAndPromptReady(QString data, QString prompt);
     void setDrawingPrompt(QString prompt);
     void gameDrawingsReady(QStringList images, QStringList clients);
+    void setDrawingList(QStringList newList);
 
 signals:
     void lobbyRoomCodeChanged();
@@ -44,6 +48,8 @@ signals:
     void gameStarting();
     void drawingPromptChanged();
     void drawPromptTime();
+    void drawingListChanged();
+    void votingTime();
 
 private:
     QString clientID;
@@ -53,6 +59,7 @@ private:
     QStringList clientsInLobby;
     QStringList readyClientsList;
     bool isSecondDrawing;
+    QStringList drawingList;
 
 };
 

@@ -10,7 +10,8 @@ GameManager::GameManager(QObject *parent) :
     clientsInLobby{QStringList{}},
     readyClientsList{QStringList{}},
     drawingPrompt{QString{}},
-    isSecondDrawing{false}
+    isSecondDrawing{false},
+    drawingList{QStringList{}}
 {
 
     messageProcessHandler = new MessageProcessHandler{this};
@@ -92,6 +93,21 @@ QString GameManager::getDrawingPrompt() {
     return drawingPrompt;
 }
 
+QStringList GameManager::getDrawingList() {
+    return drawingList;
+}
+
+void GameManager::castVote(QString imagURL) {
+
+}
+
+void GameManager::setDrawingList(QStringList newList) {
+    if(drawingList != newList) {
+        drawingList = newList;
+        emit drawingListChanged();
+    }
+}
+
 QString GameManager::drawingFilePath() {
     QString localPath{QDir::currentPath()};
     QString ret{"file:///"+ localPath + QDir::separator() + clientID  + ".png"};
@@ -144,15 +160,22 @@ void GameManager::gameDrawingsReady(QStringList images, QStringList clients) {
     workingDir.mkdir("temp");
 
     QString filePath{QDir::currentPath() + QDir::separator() + "temp" + QDir::separator()};
+    QStringList newFiles{};
 
     for(int i = 0; i < clients.size(); i++) {
-        QFile tempImage{filePath + clients.at(i) + ".png"};
+        QString fileName = filePath + clients.at(i) + ".png";
+        QFile tempImage{fileName};
         tempImage.open(QIODevice::WriteOnly);
         QByteArray fileData{QByteArray::fromHex(images.at(i).toLocal8Bit())};
         tempImage.write(fileData);
         tempImage.flush();
         tempImage.close();
+        fileName.prepend("file:///");
+
+        newFiles.append(fileName);
     }
+    setDrawingList(newFiles);
+    emit votingTime();
 }
 
 
